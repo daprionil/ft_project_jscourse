@@ -13,3 +13,8 @@ También será el encargado de capturar en sus endpoints los métodos de petici�
 ## Herramientas necesarias para la creación del Proyecto.
 
 - MongoDB, Mongoose, MongoDB Atlas, MongoDB Compass.
+
+## mongoose
+Mongoose es una herramienta que nos permite realizar una conexión a bases de datos de MongoDB por medio de nodejs.
+
+- instalación: npm i mongoose
