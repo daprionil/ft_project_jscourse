@@ -1,9 +1,16 @@
-const conectarDB = require('./src/db.js');
 const server = require('./src/server.js');
+const conectarDB = require('./src/db.js');
 
 const { PORT_SERVER } = process.env;
 const port = PORT_SERVER || 4000;
 
+//* =======================================
+
+
+
+//* =======================================
+
+//? Promise with initialize app
 const promiseInitApp = () => new Promise(async (resolve, reject) => {
     try {
         await conectarDB();
@@ -13,7 +20,9 @@ const promiseInitApp = () => new Promise(async (resolve, reject) => {
     }
 });
 
-const appInit = promiseInitApp();
+//! Initialize App
+const appInit = promiseInitApp(); 
+
 appInit
     .then(() => {
         server.listen(port, () => {

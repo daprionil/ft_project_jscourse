@@ -18,3 +18,22 @@ También será el encargado de capturar en sus endpoints los métodos de petici�
 Mongoose es una herramienta que nos permite realizar una conexión a bases de datos de MongoDB por medio de nodejs.
 
 - instalación: npm i mongoose
+- Inicialización de la base de datos:
+    Posterior a la creación de la base de datos en *MongoDB Atlas* vamos a realizar la conexión con el _cluster gist_, con mongoose es bien sencillo realizar esta conexión.
+
+    ```js
+        const mongoose = require('mongoose');
+
+        function connectDB(){
+            // URL by drivers sections in MongoDB Atlas
+            const uri = 'mongodb+srv://<username>:<password>@<hostname>:<port>';
+            mongoose.connect(uri, optionsConnection)
+                .then(() => {
+                    console.log('Base de datos conectada correctamente en ' + uri);
+                });
+        };
+    ```
+    Recomendable hacer uso de variables de entorno para valores sensibles en la URI.
+- Creación de modelos
+
+## Routing ExpressJS

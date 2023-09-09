@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
-
-const conectarDB = async () => {
-    const { MONGO_USERNAME, MONGO_USER_PASSWORD } = process.env;
-    
+const { MONGO_USERNAME, MONGO_USER_PASSWORD } = process.env;
+const conectarDB = async () => {    
+    //! Connect with database
     const gist = `mongodb+srv://${MONGO_USERNAME}:${MONGO_USER_PASSWORD}@cluster0.wkllydk.mongodb.net/?retryWrites=true&w=majority`;
     const conn = await mongoose.connect(gist,{
         useNewUrlParser: true,
