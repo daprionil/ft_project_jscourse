@@ -6,7 +6,7 @@ const rootRouter = require('./routes');
 const server = express();
 
 //! Define middlewares
-
+server.use(express.json());
 
 //! Define router
 server.use('/',rootRouter);

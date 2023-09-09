@@ -68,3 +68,36 @@ Las rutas las podemos definir para tener las direcciones a las cuales nuestro se
     - res.send(); Este método nos permite responder con información de tipo _text/html_, el cual se trata de texto plano, este método recibe un string.
     - res.json(); Nos permite responder con datos en Formato JSON, este método recibe un objeto.
     - res.render(); Va a permitirnos responder con el rendeizado de una vista HTML pasada como string hacia el template del cliente, Este método recibe un string el cual será el nombre del archivo con el nombre del template definido dentro de una carpeta llamada "_views_".
+
+    Obtención de valores:
+    Estos valores se toman desde el objeto _req_ en el callback solicitado en la creación de la ruta relativa.
+    Ej de Referencia:
+
+    ```js
+        const rootRouter = require('./routers/index.js');
+
+        //Creación del usuario
+        rootRouter.post('/users', (req,res) => {
+            //                     /\
+            //Objeto request recibido como primer parámetro del callback a ejecutar cueando esta ruta sea solicitada.
+        });
+    ```
+
+    - Parámetros de ruta relativa: se obtienen desde el objeto _req.params_.
+    - Parámetros por query: se obtienen desde el objeto en _req.query_.
+    - Parámetros enviados por data: se obtienen desde el objeto en _req.body_
+
+    **Habilitar _req.body_ con Express:**
+    Por defecto _Expressjs_ no cuenta con esta funcionalidad activa, sin embargo este mismo cuenta con la configuración necesaria para darle vida a esta forma de recibir datos.
+
+    Se hace agregando como _middleware_ la ejecución de la función `express.json()` en nuestra instancia de servidor.
+    
+    ```js
+        const express = require('express');
+        const server = require('./server.js');
+
+        server.use(express.json()); //Permite ahora recibir valores en body por http
+    ```
+    //! Posibles cambios en Routing AQUI ================================
+
+## MongoDB models

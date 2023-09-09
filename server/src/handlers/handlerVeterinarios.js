@@ -1,5 +1,12 @@
 const register = (req,res) => {
-    res.send('Eso');
+    try {
+        const { email, password, name } = req.body;
+
+        //! Response with json
+        res.json();
+    } catch ({message}) {
+        res.json({error:message})
+    }
 };
 
 const profile = (req,res) => {
