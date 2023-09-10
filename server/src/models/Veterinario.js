@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const generateId = require('../helpers/generateId.js');
 
 const VeterinarioSchema = mongoose.Schema({
     name:{
@@ -27,15 +27,18 @@ const VeterinarioSchema = mongoose.Schema({
         default: null,
     },
     token:{
-        type: String
+        type: String,
+        default: generateId
     },
     confirm: {
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 });
 
 //! Define model
-const VeterinarioModel = mongoose.model('veterinario', VeterinarioSchema);
+const VeterinarioModel = mongoose.model('veterinarios', VeterinarioSchema);
 
 module.exports = VeterinarioModel;
