@@ -35,6 +35,37 @@ Mongoose es una herramienta que nos permite realizar una conexión a bases de da
     ```
     Recomendable hacer uso de variables de entorno para valores sensibles en la URI.
 - Creación de modelos
+    Para la creación de modelos debemos de hacer uso de _mongoose_ teniendo en cuenta que al ser ejecutado en nuestro servidor debe de existir una conexión a una base de datos de _MongoDB_.
+    
+    - Métodos de creación y su estructura: para la creación del modelo vamos a necesitar un squema y un nombre de colección.
+        **Creación del Schema:**
+        ```js
+            const mongoose = require('mongoose');
+            
+            const userSchema = mongoose.Schema({
+                fullname: {
+                    type: String,
+                    required: true,
+                    trim: true
+                },
+                username:{
+                    type: String,
+                    required: true,
+                    trim: true
+                },
+                status:{
+                    type: Boolean,
+                    default: true
+                }
+            },{
+                timestamps: true
+            });
+        ```
+        **Definición del modelo**
+        ```js
+            const UserModel = mongoose.model('users', userSchema);
+        ```
+        Así ya tenemos definido el modelo en nuestra base de datos.
 
 ## Routing ExpressJS
 
@@ -83,7 +114,19 @@ Las rutas las podemos definir para tener las direcciones a las cuales nuestro se
         });
     ```
 
-    - Parámetros de ruta relativa: se obtienen desde el objeto _req.params_.
+    - Parámetros de ruta relativa:
+        Estos parámetros podemos definirlos por medio de nuestro routing; es decir, por medio a los endpoints que creamos en un router.
+
+        Ej:
+        ```js
+            const rootRouter = require('./router/index.js');
+            rootRouter.get('/users/:idUser', (req, res) => {
+                //Aquí tomamos ese valor de ruta relativa definido
+                res.send(req.params.idUser);
+            });
+        ```
+        Los valores se obtienen desde el objeto _req.params_ y accediendo a la propiedad con clave según la hayamos definido en la ruta.
+
     - Parámetros por query: se obtienen desde el objeto en _req.query_.
     - Parámetros enviados por data: se obtienen desde el objeto en _req.body_
 
@@ -101,3 +144,48 @@ Las rutas las podemos definir para tener las direcciones a las cuales nuestro se
     //! Posibles cambios en Routing AQUI ================================
 
 ## MongoDB models
+
+- Crear un nuevo registro desde tu modelo:
+    Con _mongoose_ es bastante simple, debes de tener en cuenta los valores de tu _Schema_ que son obligatorios como mínimo y ejecutar las siguientes instrucciones.
+
+    ```js
+        const modelUser = require('./models/User.js');
+        
+        async function addUser(dataUser){
+            const user = new modelUser(dataUser);
+            const savedUser = await user.save();
+
+        }
+    ```
+### Métodos de modelos con Mongoose
+- **Model.findOne()**: Este método recibe un objeto y valida en cada registro según las claves del modelo buscando un solo documento que contenga la conincidencia.
+- **Model.findById()**: Este método recibe el _Id_ de Documento y valida en cada registro para así retornar el documento encontrado, por el contrario retornaría _null_
+- **Model.find()**: Este método recibe un objeto y valida en cada registro según las claves del modelo retornando todos los documentos que coincidan con dichos valores.
+- **Model.exists()**: Este método recibe un objeto y valida en cada registro según las claves del modelo respondiendo con el _Id_ del documento encontrado, por el contrario retornaría _null_.
+
+Existen más...
+
+### Modificar un Documento
+
+Para modificar un documento con _mongoose_ solo es necesario obtenerlo por medio de su búsqueda con el modelo y posteriormento realizar el proceso como si de un Objeto se tratase.
+
+Código de Ejemplo:
+
+```js
+    const UserModel = require('../models/User.js');
+
+    const IdUser = '98IR9RJL-LT01436M-1CDA59RUM-BBOU0FIM';
+    
+    async function changeNameUser(){
+        // Obtenemos un documento por Id de UserModel
+        const userFind = await UserModel.findById(IdUser);
+        
+        //Modificamos el valor
+        userFind.name = 'Jhon Doe';
+        
+        //Guardamos los cambios <Asincrono>
+        await userFind.save();
+
+        return userFind;
+    };
+```
