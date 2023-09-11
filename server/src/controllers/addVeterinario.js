@@ -14,4 +14,4 @@ module.exports = async function({email, password, name}){
     const created = await newVeterinario.save();
 
     return created;
-}
+};

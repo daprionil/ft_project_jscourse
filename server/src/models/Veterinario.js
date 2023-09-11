@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+
 const generateId = require('../helpers/generateId.js');
 
 const VeterinarioSchema = mongoose.Schema({
@@ -37,6 +39,22 @@ const VeterinarioSchema = mongoose.Schema({
 }, {
     timestamps: true
 });
+
+VeterinarioSchema.pre('save', async function(next){
+    if(!this.isModified('password')){
+        next();
+        return;
+    };
+
+    const password = this.password;
+    const salt = await bcrypt.genSalt(10);
+    
+    this.password = await bcrypt.hash(password, salt);
+});
+
+VeterinarioSchema.methods.comparePassword = async function(passwordToCompare){
+    return await bcrypt.compare(passwordToCompare, this.password);
+}
 
 //! Define model
 const VeterinarioModel = mongoose.model('veterinarios', VeterinarioSchema);

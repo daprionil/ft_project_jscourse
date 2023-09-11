@@ -1,5 +1,6 @@
 const addVeterinario = require("../controllers/addVeterinario.js");
 const confimVeterinarioByToken = require("../controllers/confirmVeterinario.js");
+const validateExistVeterinario = require("../controllers/validateExistVeterinario.js");
 
 const register = async (req,res) => {
     //Captura los errores de nuestro código
@@ -12,8 +13,8 @@ const register = async (req,res) => {
         //! Response with json
         res.json(veterinarioCreated);
     } catch ({message}) {
-        res.status(400).json({error:message})
-    }
+        res.status(400).json({error:message});
+    };
 };
 
 const confirmAccount = async (req, res) => {
@@ -36,6 +37,36 @@ const confirmAccount = async (req, res) => {
     };
 };
 
+const authVeterinario = async (req,res) => {
+    try {
+        const { email, password } = req.body;
+        
+        //! Validate if exist veterinario
+        const existsVeterinario = await validateExistVeterinario({email});
+        if(!existsVeterinario){
+            const {message} = new Error('El usuario no existe');
+            return res.status(404).json({error:message});
+        };
+
+        //! Validate if the veterinario is confirmed
+        if(!existsVeterinario.confirm){
+            const {message} = new Error("Tu cuenta no está confirmada");
+            return res.status(401).json({error:message});
+        };
+
+        //! Validate credentials of veterinario
+        const passwordValidation = await existsVeterinario.comparePassword(password);
+        if(!passwordValidation){
+            const {message} = new Error("La contraseña no es correcta");
+            return res.status(403).json({error:message});
+        }
+
+        res.json(existsVeterinario);
+    } catch ({message}) {
+        res.json({error:message});
+    };
+};
+
 
 const profile = (req,res) => {
     res.send('Eso');
@@ -44,5 +75,6 @@ const profile = (req,res) => {
 module.exports = {
     register,
     profile,
-    confirmAccount
+    confirmAccount,
+    authVeterinario
 }
