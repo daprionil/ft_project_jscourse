@@ -1,6 +1,7 @@
 const addVeterinario = require("../controllers/addVeterinario.js");
 const confimVeterinarioByToken = require("../controllers/confirmVeterinario.js");
 const validateExistVeterinario = require("../controllers/validateExistVeterinario.js");
+const generateJWT = require("../helpers/generateJWT.js");
 
 const register = async (req,res) => {
     //Captura los errores de nuestro código
@@ -59,9 +60,12 @@ const authVeterinario = async (req,res) => {
         if(!passwordValidation){
             const {message} = new Error("La contraseña no es correcta");
             return res.status(403).json({error:message});
-        }
+        };
 
-        res.json(existsVeterinario);
+        //! Generate JWT and response
+        const jwtSesion = generateJWT({id:existsVeterinario.id});
+
+        res.json(jwtSesion);
     } catch ({message}) {
         res.json({error:message});
     };
