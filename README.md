@@ -66,6 +66,27 @@ Mongoose es una herramienta que nos permite realizar una conexión a bases de da
             const UserModel = mongoose.model('users', userSchema);
         ```
         Así ya tenemos definido el modelo en nuestra base de datos.
+        **Métodos própios de un Schema**
+        En esta funcionalidad podemos crear nuestros propios métodos manteniendo el acceso único sobre todas los Documentos y/o Instancias creadas por medio del modelo que haga uso de este Schema.
+
+        ```js
+            const userSchema = require('./userSchema.js');
+            userSchema.methods.myNewMethod = function(){
+                //Podemos hacer uso de _"this"_ que en este caso hará referencia a la instancia manejada.
+                return this.username + this.fullname;
+            };
+
+            //El método solo será accesible desde las instancias generadas desde el modelo que haga uso de este Schema.
+
+            const UserModel = mongoose.model('users', userSchema);
+            const userData = {
+                fullname:'Jhon Doe',
+                username: 'jhonDoe12'
+            };
+
+            const userCreated = await UserModel(userData);
+            userCreated.myNewMethod(); // -> 'Jhon DoejhonDoe12';
+        ```
 
 ## Routing ExpressJS
 
@@ -188,4 +209,39 @@ Código de Ejemplo:
 
         return userFind;
     };
-```
+```  
+
+## Autenticar usuario - Login
+* **Encriptación de Password**:
+    bcrypt es una buena opción en cuanto a encriptación se trata para proteger valores de texto. Esta librería nos permite _hashear_ valores y comparar valores escriptados con valores no escriptados.
+
+    Con esta filosofía podemos hacer uso de esta librería para proteger en nuestro proyecto las contraseñas.
+
+    - Encriptación:
+        ```js
+            const bcrypt = require('bcrypt');
+            async function encryptedValue(text){
+                const salt = await bcrypt.genSalt(10);
+                const hash = await bcrypt.hash(text, salt);
+
+                return hash;//Hash encrypted value
+            };
+        ```
+    - Comparar valores
+        ```js
+            const bcrypt = require('bcrypt');
+            async function compareValues(hashText, textToCompare){
+                return await bcrypt.compare(textToCompare, hashText);//Boolean
+            };
+        ```
+
+* **JWT, JSON WEB TOKEN:**
+    Es una medida de seguridad que nos va a permitir aparte de encriptar la información hacer que esta contenga una firma digital que permite identificar la procedencia de la información.
+
+    _JWT:_ 
+    ```js
+     const jwt = require('jsonwebtoken');
+     function genJWT(dataObject){
+        return jwt.sign(dataObject, signatureToken);
+     };
+    ```
