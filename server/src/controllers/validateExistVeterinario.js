@@ -8,7 +8,7 @@ async function validateExistVeterinario({email, id:_id}){
         }
         return init;
     },{});
-    const findVeterinario = await VeterinarioModel.findOne(dataValidate);
+    const findVeterinario = await VeterinarioModel.findOne(dataValidate).select('-password -confirm -token');
     return findVeterinario;
 }
 
