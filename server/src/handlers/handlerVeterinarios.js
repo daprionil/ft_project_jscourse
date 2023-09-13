@@ -73,6 +73,8 @@ const authVeterinario = async (req,res) => {
 
 
 const profile = (req,res) => {
+    const { veterinario } = res.locals;
+    console.log(veterinario);
     res.send('Eso');
 };
 

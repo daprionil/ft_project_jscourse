@@ -1,7 +1,7 @@
 const VeterinarioModel = require('../models/Veterinario.js');
 
 const confimVeterinarioByToken = async ({token}) => {
-    const veterinario = await VeterinarioModel.findOne({token});
+    const veterinario = await VeterinarioModel.findOne({token}).select("-password -confirm -token");
     
     //!If veterinario exists
     if(veterinario){

@@ -1,14 +1,13 @@
 const VeterinarioModel = require("../models/Veterinario");
 
-async function validateExistVeterinario({email}){
+async function validateExistVeterinario({email, id:_id}){
     //! Filter data empty
-    const dataValidate = Object.entries({email}).reduce((init, [k,v]) => {
+    const dataValidate = Object.entries({email, _id}).reduce((init, [k,v]) => {
         if(!!v){
             return {...init, [k]:v}
         }
         return init;
     },{});
-
     const findVeterinario = await VeterinarioModel.findOne(dataValidate);
     return findVeterinario;
 }

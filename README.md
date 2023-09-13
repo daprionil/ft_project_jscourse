@@ -184,6 +184,16 @@ Las rutas las podemos definir para tener las direcciones a las cuales nuestro se
 - **Model.find()**: Este método recibe un objeto y valida en cada registro según las claves del modelo retornando todos los documentos que coincidan con dichos valores.
 - **Model.exists()**: Este método recibe un objeto y valida en cada registro según las claves del modelo respondiendo con el _Id_ del documento encontrado, por el contrario retornaría _null_.
 
+- `.select()`: Permite seleccionar o eleminar las claves de documento que deseamos dejar o eliminar
+    ```js
+        const ModelUser = require('../models/UserModel.js');
+
+        async function getUser(id){
+            const user = await ModelUser.findById(id).select("-fullname");
+
+            // De esto forma quitaremos de la respuesta la clave [fullname] y nos entregará el objeto con las claves restantes.
+        }
+    ```
 Existen más...
 
 ### Modificar un Documento
@@ -238,10 +248,38 @@ Código de Ejemplo:
 * **JWT, JSON WEB TOKEN:**
     Es una medida de seguridad que nos va a permitir aparte de encriptar la información hacer que esta contenga una firma digital que permite identificar la procedencia de la información.
 
-    _JWT:_ 
-    ```js
-     const jwt = require('jsonwebtoken');
-     function genJWT(dataObject){
-        return jwt.sign(dataObject, signatureToken);
-     };
-    ```
+    * Creación de _JWT_:
+        ```js
+        const jwt = require('jsonwebtoken');
+        function genJWT(dataObject){
+            return jwt.sign(dataObject, signatureToken);
+        };
+        ```
+    * Verificación o Extracción de _JWT_:
+        ```js
+            const jwt = require('jsonwebtoken');
+
+            jwt.verify(token, token_secret_signature);
+            // Retorna el Objeto JWT
+        ```
+## Creación de middlewares
+Los middlewares son bloques de código que serán ejecutados entre la solicitud de algún endpoint o antes de la ejecución de nuestro propio servidor para realizar algún proceso.
+
+Para la creación de middlewares con _Expressjs_ debemos de entender en qué parte de nuestro servidor nos beneficia más según nuestros intereses; sin embargo hay varios espacios.
+
+Ej:
+
+```js
+    const handleProfile = require('./handlers/handleProfile.js');
+    const server = require('./server.js');
+    const myMiddleware = function(req,res,next){
+        console.log('Mi bloque de código');
+        next();
+    };
+    
+    //1. En todo el servidor
+    server.use(myMiddleware);
+   
+    //2. En una ruta específica antes del handler
+    server.get('/profile', myMiddleware, handleProfile);
+```
