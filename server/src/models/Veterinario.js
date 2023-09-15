@@ -40,6 +40,7 @@ const VeterinarioSchema = mongoose.Schema({
     timestamps: true
 });
 
+//? If the password key was changed, it will be encrypted
 VeterinarioSchema.pre('save', async function(next){
     if(!this.isModified('password')){
         next();
@@ -52,9 +53,10 @@ VeterinarioSchema.pre('save', async function(next){
     this.password = await bcrypt.hash(password, salt);
 });
 
+//? Internal Method to compare passwords
 VeterinarioSchema.methods.comparePassword = async function(passwordToCompare){
     return await bcrypt.compare(passwordToCompare, this.password);
-}
+};
 
 //! Define model
 const VeterinarioModel = mongoose.model('veterinarios', VeterinarioSchema);

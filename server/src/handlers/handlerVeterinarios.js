@@ -6,6 +6,10 @@ const validateExistVeterinario = require("../controllers/validateExistVeterinari
 
 const generateJWT = require("../helpers/generateJWT.js");
 const setTokenVeterinario = require("../controllers/setTokenVeterinario.js");
+const findOneVeterinario = require("../controllers/findOneVeterinario.js");
+const verifyTokenJWT = require("../helpers/verifyTokenJWT.js");
+const editVeterinario = require("../controllers/editVeterinario.js");
+const clearTokenVeterinario = require("../controllers/clearTokenVeterinario.js");
 
 const register = async (req,res) => {
     //Captura los errores de nuestro código
@@ -77,7 +81,7 @@ const authVeterinario = async (req,res) => {
 const passwordToReset = async (req,res) => {
     try {
         const { email } = req.body;
-        if(email) throw new NotFoundError('No existe un email para la validación');
+        if(!email) throw new NotFoundError('No existe un email para la validación');
 
         //! Get a user veterinario by email
         const veterinario = await validateExistVeterinario({email});
@@ -96,7 +100,15 @@ const passwordToReset = async (req,res) => {
 
 const validatePassword = async (req,res) => {
     try {
-        res.send('Melo');
+        const { tokenJWT } = req.params;
+        const veterinarioFind = await findOneVeterinario({token:tokenJWT});
+        
+        if(!veterinarioFind) throw new NotFoundError('El token no es válido');
+        
+        res.json({
+            confirmed: true,
+            msg: 'Token válido, puedes continuar'
+        });
     } catch ({message, status}) {
         res.status(status || 404).json({error:message});
     };
@@ -104,7 +116,27 @@ const validatePassword = async (req,res) => {
 
 const changePassword = async (req,res) => {
     try {
-        res.send('Melo');
+        const { tokenId } = req.params;
+        const { password } = req.body;
+
+        //! If not exist a values
+        if(!tokenId || !password) throw new NotFoundError('No se encuentran los valores requeridos para cambiar contraseña [password, token]');
+        
+        //! Get a veterinario
+        const veterinario = await findOneVeterinario({token:tokenId});
+        
+        //! if doesn't exist a veterinario with that tokenId
+        if(!veterinario) throw new NotFoundError('Token no válido');
+
+        //! If exist veterinario and the client was set a new Password
+        await editVeterinario(veterinario.id, {password});
+        const clearedTokenVeterinario = await clearTokenVeterinario({token: tokenId});
+
+        //* Send Response with veterinario password changed
+        res.json({
+            changed: true,
+            veterinario: clearedTokenVeterinario
+        });
     } catch ({message, status}) {
         res.status(status || 404).json({error:message});
     };
