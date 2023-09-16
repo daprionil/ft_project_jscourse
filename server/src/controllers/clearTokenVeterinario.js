@@ -1,9 +1,9 @@
-const NotFoundError = require("../TypeErrors/NotFoundError");
+const CustomError = require("../TypeErrors/CustomError");
 const findOneVeterinario = require("./findOneVeterinario");
 
 const clearTokenVeterinario  = async ({token}) => {
     //! If doesn't exist a token
-    if(!token) throw new NotFoundError('No hay un token');
+    if(!token) throw CustomError.NotFoundError('No hay un token');
 
     //! Get a veterinario by Token
     const findVeterinario = await findOneVeterinario({token});

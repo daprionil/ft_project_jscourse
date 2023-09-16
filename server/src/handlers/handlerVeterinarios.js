@@ -1,5 +1,4 @@
-const AuthorizationError = require("../TypeErrors/AuthorizationError.js");
-const NotFoundError = require("../TypeErrors/NotFoundError.js");
+const CustomError = require("../TypeErrors/CustomError.js");
 const addVeterinario = require("../controllers/addVeterinario.js");
 const confimVeterinarioByToken = require("../controllers/confirmVeterinario.js");
 const validateExistVeterinario = require("../controllers/validateExistVeterinario.js");
@@ -35,7 +34,7 @@ const confirmAccount = async (req, res) => {
 
         //! If not exist
         if(!existVeterinario) {
-            throw new AuthorizationError('Token no Valido');
+            throw CustomError.AuthorizationError('Token no Valido');
         };
 
         //! Send success json response
@@ -52,20 +51,20 @@ const authVeterinario = async (req,res) => {
         //! Validate if exist veterinario
         const existsVeterinario = await validateExistVeterinario({email});
         if(!existsVeterinario){
-            const {message} = new NotFoundError('El usuario no existe');
+            const {message} = CustomError.NotFoundError('El usuario no existe');
             return res.status(404).json({error:message});
         };
 
         //! Validate if the veterinario is confirmed
         if(!existsVeterinario.confirm){
-            const {message} = new AuthorizationError("Tu cuenta no está confirmada");
+            const {message} = CustomError.AuthorizationError("Tu cuenta no está confirmada");
             return res.status(401).json({error:message});
         };
 
         //! Validate credentials of veterinario
         const passwordValidation = await existsVeterinario.comparePassword(password);
         if(!passwordValidation){
-            const {message} = new AuthorizationError("La contraseña no es correcta");
+            const {message} = CustomError.AuthorizationError("La contraseña no es correcta");
             return res.status(403).json({error:message});
         };
 
@@ -81,13 +80,13 @@ const authVeterinario = async (req,res) => {
 const passwordToReset = async (req,res) => {
     try {
         const { email } = req.body;
-        if(!email) throw new NotFoundError('No existe un email para la validación');
+        if(!email) throw CustomError.NotFoundError('No existe un email para la validación');
 
         //! Get a user veterinario by email
         const veterinario = await validateExistVeterinario({email});
         
         //! If doesn't exist a veterinario with that email
-        if(!veterinario) throw new NotFoundError('Email no encontrado');
+        if(!veterinario) throw CustomError.NotFoundError('Email no encontrado');
 
         //! Set token in user
         await setTokenVeterinario(veterinario.id);
@@ -103,7 +102,7 @@ const validatePassword = async (req,res) => {
         const { tokenJWT } = req.params;
         const veterinarioFind = await findOneVeterinario({token:tokenJWT});
         
-        if(!veterinarioFind) throw new NotFoundError('El token no es válido');
+        if(!veterinarioFind) throw CustomError.NotFoundError('El token no es válido');
         
         res.json({
             confirmed: true,
@@ -120,13 +119,13 @@ const changePassword = async (req,res) => {
         const { password } = req.body;
 
         //! If not exist a values
-        if(!tokenId || !password) throw new NotFoundError('No se encuentran los valores requeridos para cambiar contraseña [password, token]');
+        if(!tokenId || !password) throw CustomError.NotFoundError('No se encuentran los valores requeridos para cambiar contraseña [password, token]');
         
         //! Get a veterinario
         const veterinario = await findOneVeterinario({token:tokenId});
         
         //! if doesn't exist a veterinario with that tokenId
-        if(!veterinario) throw new NotFoundError('Token no válido');
+        if(!veterinario) throw CustomError.NotFoundError('Token no válido');
 
         //! If exist veterinario and the client was set a new Password
         await editVeterinario(veterinario.id, {password});

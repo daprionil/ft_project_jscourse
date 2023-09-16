@@ -1,4 +1,4 @@
-const AuthorizationError = require("../TypeErrors/AuthorizationError.js");
+const CustomError = require("../TypeErrors/CustomError.js");
 const findVeterinarioById = require("../controllers/findVeterinarioById.js");
 const verifyTokenJWT = require("./verifyTokenJWT.js");
 
@@ -17,7 +17,7 @@ const authMiddleware = async (req,res, next) => {
             const veterinario = await findVeterinarioById(id);
             
             //! If doesn't exist a veterinario with that Token valid
-            if(!veterinario) throw new AuthorizationError('No existe un usuario perteneciente a dicho token');
+            if(!veterinario) throw CustomError.AuthorizationError('No existe un usuario perteneciente a dicho token');
 
             //!If all process is success
             res.locals.veterinario = veterinario;
@@ -26,7 +26,7 @@ const authMiddleware = async (req,res, next) => {
         };
     
         //! If not exist a valid Token
-        throw new AuthorizationError('La petición no cuenta con un tóken de Login Válido');
+        throw CustomError.AuthorizationError('La petición no cuenta con un tóken de Login Válido');
     } catch ({status, message}) {
         res.status(403).json({error: message});
     }
