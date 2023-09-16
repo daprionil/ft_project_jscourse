@@ -1,11 +1,13 @@
 const { Router } = require('express');
 
-const veterinarioRouter = require('./VeterinarioRoutes.js');
+const VeterinarioRouter = require('./VeterinarioRoutes.js');
+const PacienteRouter = require('./PacienteRoutes.js');
 
 const rootRouter = Router();
 
 //! Define tree routers
-rootRouter.use('/api/veterinarios', veterinarioRouter);
+rootRouter.use('/api/veterinarios', VeterinarioRouter);
+rootRouter.use('/api/pacientes', PacienteRouter);
 
 //* ============
 module.exports = rootRouter;

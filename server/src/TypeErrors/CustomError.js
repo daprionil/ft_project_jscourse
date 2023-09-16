@@ -1,7 +1,7 @@
 const AuthorizationError = require("./AuthorizationError");
 const NotFoundError = require("./NotFoundError");
 
-class CustomError extends Error{
+class CustomError{
     NotFoundError(message){
         return new NotFoundError(message);
     };
