@@ -70,7 +70,7 @@ const authVeterinario = async (req,res) => {
         //! Generate JWT and response
         const jwtSesion = generateJWT({id:existsVeterinario.id});
 
-        res.json(jwtSesion);
+        res.json({token: jwtSesion});
     } catch ({message, status = 404}) {
         res.status(status).json({error:message});
     };

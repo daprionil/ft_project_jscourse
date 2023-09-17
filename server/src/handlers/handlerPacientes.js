@@ -1,4 +1,5 @@
 const addPaciente = require('../controllers/addPaciente.js');
+const getAllPacientes = require('../controllers/getAllPacientes.js');
 
 //! route POST/api/pacientes Add new Paciente by Veterinario JWT Token
 async function addPacienteHandler(req,res){
@@ -19,7 +20,12 @@ async function addPacienteHandler(req,res){
 //! route GET/api/pacientes GET all Pacientes by Veterinario
 async function getPacientesHandler(req,res){
     try {
-        res.send('Tome su paciente');
+        const idVeterinario = res.locals.veterinario._id;
+        //! Search pacientes
+        const pacientes = await getAllPacientes(idVeterinario);
+
+        //! Send response with json format
+        res.json(pacientes);
     } catch ({status, message}) {
         res.status(status).json({error: message});
     };   
