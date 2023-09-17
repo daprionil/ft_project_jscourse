@@ -6,7 +6,6 @@ const validateExistVeterinario = require("../controllers/validateExistVeterinari
 const generateJWT = require("../helpers/generateJWT.js");
 const setTokenVeterinario = require("../controllers/setTokenVeterinario.js");
 const findOneVeterinario = require("../controllers/findOneVeterinario.js");
-const verifyTokenJWT = require("../helpers/verifyTokenJWT.js");
 const editVeterinario = require("../controllers/editVeterinario.js");
 const clearTokenVeterinario = require("../controllers/clearTokenVeterinario.js");
 
@@ -57,8 +56,8 @@ const authVeterinario = async (req,res) => {
 
         //! Validate if the veterinario is confirmed
         if(!existsVeterinario.confirm){
-            const {message} = CustomError.AuthorizationError("Tu cuenta no está confirmada");
-            return res.status(401).json({error:message});
+            const {status, message} = CustomError.AuthorizationError("Tu cuenta no está confirmada");
+            return res.status(status).json({error:message});
         };
 
         //! Validate credentials of veterinario

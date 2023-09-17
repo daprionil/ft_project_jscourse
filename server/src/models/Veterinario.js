@@ -55,7 +55,8 @@ VeterinarioSchema.pre('save', async function(next){
 
 //? Internal Method to compare passwords
 VeterinarioSchema.methods.comparePassword = async function(passwordToCompare){
-    return await bcrypt.compare(passwordToCompare, this.password);
+    const validatePasswordsVeterinario = await bcrypt.compare(passwordToCompare, this.password);
+    return validatePasswordsVeterinario;
 };
 
 //! Define model

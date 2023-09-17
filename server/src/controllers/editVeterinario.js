@@ -8,10 +8,9 @@ const editVeterinario = async (idVeterinario, {email, name, password, phoneNumbe
         password,
         phoneNumber,
         website
-    }).reduce((init, [k,v]) => {
-        if(!!v) return ({...init, [k]:v})
-        return init;
-    },{});
+    }).reduce((init, [k,v]) => (
+        !!v ? {...init, [k]:v} : init
+    ),{});
 
     const veterinario = await VeterinarioModel.findOne({_id:idVeterinario});
     

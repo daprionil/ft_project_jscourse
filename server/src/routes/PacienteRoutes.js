@@ -1,13 +1,16 @@
 const { Router } = require('express');
-const addPacienteHandler = require('../helpers/addPacienteHandler.js');
-const getPacienteHandler = require('../helpers/getPacienteHandler.js');
+const authMiddleware = require('../helpers/authMiddleware.js');
+const {
+    addPacienteHandler,
+    getPacientesHandler
+} = require('../handlers/handlerPacientes.js');
 
 //? Router Creations
-const PacienteRouter = new Router();
+const PacienteRouter = Router();
 
 //! Creation routes
 PacienteRouter.route('/')
-    .get(getPacienteHandler)
-    .post(addPacienteHandler)
+    .get(authMiddleware, getPacientesHandler)
+    .post(authMiddleware, addPacienteHandler)
 
 module.exports = PacienteRouter;
