@@ -1,5 +1,7 @@
+const CustomError = require('../TypeErrors/CustomError.js');
 const addPaciente = require('../controllers/addPaciente.js');
 const getAllPacientes = require('../controllers/getAllPacientes.js');
+const getPacienteById = require('../controllers/getPacienteById.js');
 
 //! route POST/api/pacientes Add new Paciente by Veterinario JWT Token
 async function addPacienteHandler(req,res){
@@ -29,9 +31,61 @@ async function getPacientesHandler(req,res){
     } catch ({status, message}) {
         res.status(status).json({error: message});
     };   
-}
+};
+
+//! route GET/api/paciente/:idPaciente
+async function getAPacienteHandler(req,res){
+    try {
+        const { idPaciente } = req.params;
+        const idVeterinario = res.locals.veterinario._id;
+
+        //! If the idPaciente is empty
+        if(!idPaciente) throw CustomError.NotFoundError('No hay un id para búsqueda de paciente');
+    
+        //! get a Paciente by Id
+        const paciente = await getPacienteById(idPaciente);
+        
+        //! Validate if the paciente have idVeterinario with same 
+        if(paciente.idVeterinario.toString() !== idVeterinario.toString()){
+            throw CustomError.AuthorizationError('No tiene acceso a este paciente.');
+        };
+
+        //! Send response
+        res.json({paciente});
+    } catch ({status, message}) {
+        res.status(status).json({error: message})
+    };
+};
+
+//! route DELETE/api/paciente/:idPaciente
+async function deletePacienteHandler(req,res){
+    try {
+        const { idPaciente } = req.params;
+        //! If the idPaciente is empty
+        if(!idPaciente) throw CustomError.NotFoundError('No hay un id para búsqueda de paciente');
+    
+    } catch ({status, message}) {
+        res.status(status).json({error: message})
+    };
+};
+
+//! route PUT/api/paciente/:idPaciente
+async function editPacienteHandler(req,res){
+    try {
+        const { idPaciente } = req.params;
+        
+        //! If the idPaciente is empty
+        if(!idPaciente) throw CustomError.NotFoundError('No hay un id para búsqueda de paciente');
+    
+    } catch ({status, message}) {
+        res.status(status).json({error: message})
+    };
+};
 
 module.exports = {
     addPacienteHandler,
-    getPacientesHandler
+    getPacientesHandler,
+    getAPacienteHandler,
+    deletePacienteHandler,
+    editPacienteHandler
 };
