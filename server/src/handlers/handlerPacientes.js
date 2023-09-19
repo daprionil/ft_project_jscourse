@@ -14,7 +14,7 @@ async function addPacienteHandler(req,res){
         
         //! Response to Client
         res.json(pacienteCreated);
-    } catch ({status, message}) {
+    } catch ({status = 500, message}) {
         res.status(status).json({error: message});
     };
 };
@@ -28,7 +28,7 @@ async function getPacientesHandler(req,res){
 
         //! Send response with json format
         res.json(pacientes);
-    } catch ({status, message}) {
+    } catch ({status = 500, message}) {
         res.status(status).json({error: message});
     };   
 };
@@ -52,7 +52,7 @@ async function getAPacienteHandler(req,res){
 
         //! Send response
         res.json({paciente});
-    } catch ({status, message}) {
+    } catch ({status = 500, message}) {
         res.status(status).json({error: message})
     };
 };
@@ -64,7 +64,7 @@ async function deletePacienteHandler(req,res){
         //! If the idPaciente is empty
         if(!idPaciente) throw CustomError.NotFoundError('No hay un id para búsqueda de paciente');
     
-    } catch ({status, message}) {
+    } catch ({status = 500, message}) {
         res.status(status).json({error: message})
     };
 };
@@ -77,7 +77,7 @@ async function editPacienteHandler(req,res){
         //! If the idPaciente is empty
         if(!idPaciente) throw CustomError.NotFoundError('No hay un id para búsqueda de paciente');
     
-    } catch ({status, message}) {
+    } catch ({status = 500, message}) {
         res.status(status).json({error: message})
     };
 };

@@ -50,28 +50,25 @@ const authVeterinario = async (req,res) => {
         //! Validate if exist veterinario
         const existsVeterinario = await validateExistVeterinario({email});
         if(!existsVeterinario){
-            const {message} = CustomError.NotFoundError('El usuario no existe');
-            return res.status(404).json({error:message});
+            throw CustomError.NotFoundError('El usuario no existe');
         };
 
         //! Validate if the veterinario is confirmed
         if(!existsVeterinario.confirm){
-            const {status, message} = CustomError.AuthorizationError("Tu cuenta no está confirmada");
-            return res.status(status).json({error:message});
+            throw CustomError.AuthorizationError("Tu cuenta no está confirmada");
         };
 
         //! Validate credentials of veterinario
         const passwordValidation = await existsVeterinario.comparePassword(password);
         if(!passwordValidation){
-            const {message} = CustomError.AuthorizationError("La contraseña no es correcta");
-            return res.status(403).json({error:message});
+            throw CustomError.AuthorizationError("La contraseña no es correcta");
         };
 
         //! Generate JWT and response
         const jwtSesion = generateJWT({id:existsVeterinario.id});
 
         res.json({token: jwtSesion});
-    } catch ({message, status = 404}) {
+    } catch ({message, status = 500}) {
         res.status(status).json({error:message});
     };
 };
@@ -91,8 +88,8 @@ const passwordToReset = async (req,res) => {
         await setTokenVeterinario(veterinario.id);
 
         res.json({message: `Hemos enviado los pasos a tu correo ${email}.`});
-    } catch ({message, status}) {
-        res.status(status || 404).json({error:message});
+    } catch ({message, status = 500}) {
+        res.status(status).json({error:message});
     };
 };
 
@@ -107,8 +104,8 @@ const validatePassword = async (req,res) => {
             confirmed: true,
             msg: 'Token válido, puedes continuar'
         });
-    } catch ({message, status}) {
-        res.status(status || 404).json({error:message});
+    } catch ({message, status = 500}) {
+        res.status(status).json({error:message});
     };
 };
 
@@ -135,8 +132,8 @@ const changePassword = async (req,res) => {
             changed: true,
             veterinario: clearedTokenVeterinario
         });
-    } catch ({message, status}) {
-        res.status(status || 404).json({error:message});
+    } catch ({message, status = 500}) {
+        res.status(status).json({error:message});
     };
 };
 

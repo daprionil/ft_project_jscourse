@@ -1,9 +1,8 @@
 class AuthorizationError extends Error{
     #status;
-    #type;
     constructor(message){
         super(message);
-        this.#type = 'AuthorizationError';
+        this.type = 'AuthorizationError';
         this.#status = 401;
     };
 

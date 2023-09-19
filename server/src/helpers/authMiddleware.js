@@ -27,8 +27,8 @@ const authMiddleware = async (req,res, next) => {
     
         //! If not exist a valid Token
         throw CustomError.AuthorizationError('La petición no cuenta con un tóken de Login Válido');
-    } catch ({status, message}) {
-        res.status(403).json({error: message});
+    } catch ({status = 500, message}) {
+        res.status(status).json({error: message});
     }
 };
 
