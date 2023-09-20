@@ -8,14 +8,15 @@ const {
     editPacienteHandler
 } = require('../handlers/handlerPacientes.js');
 
-//? Router Creations
+//? Router Creation
 const PacienteRouter = Router();
 
 //! Creation routes
 PacienteRouter.route('/')
     .get(authMiddleware, getPacientesHandler)
     .post(authMiddleware, addPacienteHandler)
-PacienteRouter.route('/:idPaciente')
+
+    PacienteRouter.route('/:idPaciente')
     .get(authMiddleware, getAPacienteHandler)
     .put(authMiddleware, editPacienteHandler)
     .delete(authMiddleware, deletePacienteHandler);

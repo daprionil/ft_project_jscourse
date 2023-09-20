@@ -7,9 +7,12 @@ const getPacienteById = async (idPaciente) => {
     if(!idPaciente) throw CustomError.NotFoundError('No existe un parámetro [ idPaciente ]');
 
     //! Search all pacientes by idPaciente
-    const paciente = await ModelPaciente.findById(idPaciente);
-    
-    return paciente;
+    try {
+        const paciente = await ModelPaciente.findById(idPaciente);
+        return paciente;
+    }catch(error){
+        console.log(error);
+    }
 };
 
 module.exports = getPacienteById;
