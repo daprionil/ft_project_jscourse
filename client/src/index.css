@@ -1,3 +1,10 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind base;
+
+
+@layer components{
+    .btn{
+        @apply w-min border px-3 py-2 rounded font-semibold hover:shadow-xl duration-300 transition ease-in cursor-pointer
+    }
+}
