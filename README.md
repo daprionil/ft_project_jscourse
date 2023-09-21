@@ -283,3 +283,15 @@ Ej:
     //2. En una ruta específica antes del handler
     server.get('/profile', myMiddleware, handleProfile);
 ```
+# Frontend React
+
+Para comenzar, debemos de crear el bundler que nos va a permitir trabajar con React, este nos va a permitir transpilar el código para que pueda ser ejecutado en la web de forma automática.
+
+Vamos a ejecutar el bundler con _vite_, esta herramienta nos permite crear los bundler con distintos proyectos.
+
+```bash
+---> npm init vite@latest
+```
+Seleccionamos la opción de **react** con _javascript_.
+
+Esto va a crear el proyecto base con __*React*, *ReactDom*__
