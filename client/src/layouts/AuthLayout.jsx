@@ -4,7 +4,7 @@ const AuthLayout = () => {
   return (
     <>
         <main
-            className="grid grid-cols-1 md:grid-cols-2 mt-10 justify-items-center container mx-auto gap-4 px-3 items-center"
+            className="container grid items-center grid-cols-1 gap-4 px-3 mx-auto mt-32 md:grid-cols-2 justify-items-center"
         >
             <Outlet />
         </main>
@@ -12,4 +12,4 @@ const AuthLayout = () => {
   )
 }
 
-export default AuthLayout
+export default AuthLayout;
