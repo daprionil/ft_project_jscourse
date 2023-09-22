@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
+import axios from "axios";
+
 import { ValidateForms, messageValidationsError } from "../helpers/ValidateForms";
 import Alert from "../components/Alert";
 
@@ -36,7 +38,7 @@ const SignIn = () => {
     }
 
     //!Validate form with submit event
-    const handleSubmitForm = evt => {
+    const handleSubmitForm = async evt => {
         evt.preventDefault();
         
         const listFieldValuesForm = Object.entries(valuesForm);
@@ -53,7 +55,7 @@ const SignIn = () => {
                 if(!resultValidation){
                     //! Set error in alert
                     setErrorAlert(messageValidationsError[name]);
-                    break;
+                    return;
                 }
                 continue;
             }
@@ -61,7 +63,7 @@ const SignIn = () => {
             if(value.length < 8){
                 //! Set error in alert
                 setErrorAlert(`El campo [${name}] tiene menos de 8 carácteres`);
-                break;
+                return;
             }
         }
 
@@ -71,7 +73,21 @@ const SignIn = () => {
             return;
         }
 
-        clearAlert();
+        //! Send request to SignIn
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios`, {
+                name: valuesForm.name,
+                email: valuesForm.email,
+                password: valuesForm.password
+            });
+            console.log(response.data);
+            setAlertMessage({
+                msg: `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`,
+                type: ''
+            })
+        } catch ({response:{data:{error}}}) {
+            setErrorAlert(error);
+        }
     };
 
     return (
