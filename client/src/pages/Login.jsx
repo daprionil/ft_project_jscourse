@@ -36,7 +36,7 @@ const Login = () => {
                 </form>
                 <nav className="flex flex-col md:flex-row [&>a]:text-xl md:[&>a]:text-sm md:flex-nowrap items-center justify-center md:justify-between [&>a]:text-gray-500 [&>a]:font-bold mt-10">
                     <NavLink className='hover:underline' to='/signin' replace>Registrarse</NavLink>
-                    <NavLink className='hover:underline'>¿ Olvidaste la contraseña ?</NavLink>
+                    <NavLink className='hover:underline' to='/resetpassword' replace >¿ Olvidaste la contraseña ?</NavLink>
                 </nav>
             </div>
         </>
