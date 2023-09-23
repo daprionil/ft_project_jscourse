@@ -72,7 +72,7 @@ const SignIn = () => {
             setErrorAlert('Las contraseñas no coinciden');
             return;
         }
-
+        
         //! Send request to SignIn
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios`, {
@@ -85,8 +85,13 @@ const SignIn = () => {
                 msg: `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`,
                 type: ''
             })
-        } catch ({response:{data:{error}}}) {
-            setErrorAlert(error);
+        } catch (error) {
+            if(error.code === 'ERR_NETWORK'){
+                setErrorAlert('El servicio no se encuentra disponible, Intentalo más tarde')
+                return;
+            }
+            const {response:{data:{error: msgerror}}} = error;
+            setErrorAlert(msgerror)
         }
     };
 

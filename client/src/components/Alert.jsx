@@ -7,4 +7,4 @@ const Alert = ({msg, type = 'error'}) => {
   )
 }
 
-export default Alert
+export default Alert;

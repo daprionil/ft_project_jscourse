@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
-import SignIn from "./pages/SignIn";
+import SignIn from "./pages/SignUp";
 import ConfirmAccount from "./pages/ConfirmAccount";
 import ChangePassword from "./pages/ChangePassword";
 

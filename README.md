@@ -295,3 +295,61 @@ Vamos a ejecutar el bundler con _vite_, esta herramienta nos permite crear los b
 Seleccionamos la opción de **react** con _javascript_.
 
 Esto va a crear el proyecto base con __*React*, *ReactDom*__
+
+## React Router DOM
+Esta librería nos permite generar vistas por medio la url según el valor que contengan después de la dirección de dominio. Esta librería escucha cuando por medio de sus elementos de enlace es accionado para así mostrar según las **rutas** configuradas un componente u otro.
+
+### Instalación
+```shell
+---> npm i --save-dev react-router-dom
+```
+
+### Configuración inicial en nuestra aplicación de React
+
+Existe un elemento provider que nos permite crear rutas desde los componentes contenidos en este elemento, el cual es dado por la Librería.
+
+```js
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { BrowserRouter } from 'react-router-dom';
+    import App from './App.jsx';
+
+    const root = createRoot(document.querySelector('#root'));
+    root.render(
+        <React.StrictMode>
+            {/* Este nos permite en sus rutas internas comenzar a usar la Librería */}
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </React.StrictMode>
+    )
+```
+
+### Creación de Rutas
+
+Para comenzar a crear las rutas debemos de hacer uso de un componente y subcomponentes en los cuales definiremos las rutas.
+
+- `Routes` Componente: permite generar grupo de rutas.
+- `Route` Componente: Permite configurar una ruta relacionando el renderizado de un componente.
+```js
+    import { Route, Routes } from "react-router-dom";
+    import Login from "./pages/Login";
+
+    function App() {
+        return (
+            // Permite crear grupos de rutas
+            <Routes>
+                {/* Crea una ruta y renderiza un componente cuando esta esté en el path */}
+                <Route path="/" element={<AuthLayout />}/>
+                <Route path="/login" element={<Login />}/>
+            </Routes>
+        )
+    }
+
+    export default App;
+```
+
+## Envío de Emails desde el Frontend
+Herramientas:
+- mailtrap: Es un entorno de recepción, envío y control de peticiones SMTP para correos electrónicos, permite que no se traten como un spam si no que sean tomados de forma válida.
+- nodemailer: Es una librería de _nodejs_ para el envío de mensajes por medio del protocolo smtp
