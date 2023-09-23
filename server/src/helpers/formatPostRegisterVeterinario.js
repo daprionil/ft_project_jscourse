@@ -11,15 +11,14 @@ function formatPostRegisterVeterinario({
         text: 'Comprueba tu cuenta en APV',
         html: `
         <!DOCTYPE html>
-        <html lang="es">
         <head>
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
         </head>
         <body>
-            <main class="content_mail">
-                <div class="title">
+            <div class="content_mail">
+                <div class="title" style="font-weight: bold">
                     <p>Bienvenido <span class="title_span">${name}</span>, gracias por registrarte en APV - Administrador de Pacientes</p>
                 </div>
                 <div>
@@ -29,9 +28,9 @@ function formatPostRegisterVeterinario({
                 <div>
                     <a
                         href="${process.env.CLIENT_URL_DEPLOY}/confirmaccount/${tokenConfirmAccount}"
-                        target="_blank"
                         rel="noopener noreferrer"
                         class="btn_confirm"
+                        style="font-weight: bold"
                     >
                         <button>Ir a Confirmar</button>
                     </a>
@@ -39,7 +38,7 @@ function formatPostRegisterVeterinario({
                 <div>
                     <p>Si no hiciste el registro, Ignora este mensaje</p>
                 </div>
-            </main>
+            </div>
         </body>
         </html>
         <style>
@@ -50,7 +49,6 @@ function formatPostRegisterVeterinario({
                 text-align: center;
                 background: #4f46e5;
                 color: #bebddb;
-                font-weight: bold;
                 font-size: 1.8rem;
             }
             .title .title_span{
@@ -63,13 +61,10 @@ function formatPostRegisterVeterinario({
                 border-radius: 15px;
                 background: white;
                 overflow: hidden;
+                text-align: center;
             }
             .content_mail > div{
                 padding: 10px;
-                display: grid;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
             }
             .btn_confirm > button{
                 border: none;
@@ -81,14 +76,7 @@ function formatPostRegisterVeterinario({
                 color: white;
                 
                 cursor: pointer;
-                font-size: 1.3rem;
-                font-weight: 700;
-                
-                transform: scale(1);
-                transition: all .3s ease;
-            }
-            .btn_confirm:hover > button{
-                transform: scale(1.02);
+                font-size: 1.3rem
             }
         </style>
         `
