@@ -3,11 +3,14 @@ const addVeterinario = require("../controllers/addVeterinario.js");
 const confimVeterinarioByToken = require("../controllers/confirmVeterinario.js");
 const validateExistVeterinario = require("../controllers/validateExistVeterinario.js");
 
-const generateJWT = require("../helpers/generateJWT.js");
 const setTokenVeterinario = require("../controllers/setTokenVeterinario.js");
+const generateJWT = require("../helpers/generateJWT.js");
 const findOneVeterinario = require("../controllers/findOneVeterinario.js");
 const editVeterinario = require("../controllers/editVeterinario.js");
 const clearTokenVeterinario = require("../controllers/clearTokenVeterinario.js");
+const sendMail = require('../controllers/sendMail.js');
+const formatPostRegisterVeterinario = require('../helpers/formatPostRegisterVeterinario.js');
+
 
 const register = async (req,res) => {
     //Captura los errores de nuestro código
@@ -16,6 +19,17 @@ const register = async (req,res) => {
         
         //? Validation and Create veterinario
         const veterinarioCreated = await addVeterinario({ email, password, name });
+
+        //? Send Email to confirm with veterinario token
+        sendMail({
+            mailOptions: formatPostRegisterVeterinario(
+                {
+                    email,
+                    name,
+                    tokenConfirmAccount: veterinarioCreated.token,
+                }
+            )
+        });
 
         //! Response with json
         res.json(veterinarioCreated);

@@ -283,3 +283,126 @@ Ej:
     //2. En una ruta específica antes del handler
     server.get('/profile', myMiddleware, handleProfile);
 ```
+# Frontend React
+
+Para comenzar, debemos de crear el bundler que nos va a permitir trabajar con React, este nos va a permitir transpilar el código para que pueda ser ejecutado en la web de forma automática.
+
+Vamos a ejecutar el bundler con _vite_, esta herramienta nos permite crear los bundler con distintos proyectos.
+
+```bash
+---> npm init vite@latest
+```
+Seleccionamos la opción de **react** con _javascript_.
+
+Esto va a crear el proyecto base con __*React*, *ReactDom*__
+
+## React Router DOM
+Esta librería nos permite generar vistas por medio la url según el valor que contengan después de la dirección de dominio. Esta librería escucha cuando por medio de sus elementos de enlace es accionado para así mostrar según las **rutas** configuradas un componente u otro.
+
+### Instalación
+```shell
+---> npm i --save-dev react-router-dom
+```
+
+### Configuración inicial en nuestra aplicación de React
+
+Existe un elemento provider que nos permite crear rutas desde los componentes contenidos en este elemento, el cual es dado por la Librería.
+
+```js
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { BrowserRouter } from 'react-router-dom';
+    import App from './App.jsx';
+
+    const root = createRoot(document.querySelector('#root'));
+    root.render(
+        <React.StrictMode>
+            {/* Este nos permite en sus rutas internas comenzar a usar la Librería */}
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </React.StrictMode>
+    )
+```
+
+### Creación de Rutas
+
+Para comenzar a crear las rutas debemos de hacer uso de un componente y subcomponentes en los cuales definiremos las rutas.
+
+- `Routes` Componente: permite generar grupo de rutas.
+- `Route` Componente: Permite configurar una ruta relacionando el renderizado de un componente.
+```js
+    import { Route, Routes } from "react-router-dom";
+    import Login from "./pages/Login";
+
+    function App() {
+        return (
+            // Permite crear grupos de rutas
+            <Routes>
+                {/* Crea una ruta y renderiza un componente cuando esta esté en el path */}
+                <Route path="/" element={<AuthLayout />}/>
+                <Route path="/login" element={<Login />}/>
+            </Routes>
+        )
+    }
+
+    export default App;
+```
+
+- Hooks de React Router: Los hooks permiten acceder a funcionalidades ancladas al ciclo de vida o estado de nueva aplicación, siendo estos ejecutados en componentes de función.
+    - useParams: nos permite acceder con un objeto, a los parámetros definidos en la ruta dinámica configurada. Hace referencia a la forma de tomar un valor con una ruta dinámica.
+
+## Envío de Emails
+Herramientas:
+- mailtrap: Es un entorno de recepción, envío y control de peticiones SMTP para correos electrónicos, permite que no se traten como un spam si no que sean tomados de forma válida.
+
+Nos vamos registrar y al iniciar sesión, crearémos un _box de testing_ con la configuración para __nodejs__.
+
+mailtrap nos va a proveer de un código de Javascript para dicho fin.
+```js
+    var transport = nodemailer.createTransport({
+        host: "sandbox.io",
+        port: 5050,
+        auth: {
+            user: "example",
+            pass: "example"
+        }
+    });
+```
+- nodemailer: Es una librería de _nodejs_ para el envío de mensajes por medio del protocolo _SMTP_.
+Para comenzar con esta librería y crear un servicio para el envío de emails vamos tener que seguir las siguientes instrucciones.
+    - **Generar un transporte**: Podemos hacerlo por medio de un método que tiene _nodemailer_ el cual nos retorna un objeto configurado para el envío de Emails desde este, este transporte nos permite enviar por medio de un método la solicitud _SMTP_.
+    
+    ```js
+        const nodemailer = require('nodemailer');
+
+        const tranporter = nodemailer.createTransport({// Recibe un objeto de configuración con el siguiente formato
+            host: <YOUR HOST SMTP SERVICE>,
+            port: <YOUR PORT SMTP SERVICE>,
+            auth:{
+                user: <YOUR USER SMTP SERVICE>,
+                pass: <YOUR HOST SMTP SERVICE>
+            }
+        });
+
+        module.exports = transporter;
+    ```
+    - **Envío de email**: Vamos a hacer uso del método que nos entrega __transporter__ para enviar un email. Este método no es asincrono si no que funciona por medio de un callback. En su primer argumento solicita un objeto de configuración con el siguiente formato, y seguido en su segundo argumento solicita un _callback_ para ser ejecutado luego de que finalice el proceso de envío.
+    ```js
+        const transporter = require('../transporter.js');
+
+        function sendMail(){
+            transporter.sendMail({
+                from: < Titulo de quien lo envía>,
+                to: <Email que recibe el mail>,
+                subject: <Asunto del mail>,
+                text: < Texto HTML >,
+                html: < Template HTML para el mail>,
+            })
+        }
+    ```
+## Variables de entorno con Vite
+Las variables de entorno en vite tienen su propia configuración y forma de hacer uso de ellas.
+Podemos definir diferentes tipos de archivo siempre con la extension _.env_ y __vite__ lo va a tomar de igual forma, esto lo hace un requisito. Además __vite__ requiere que las variables que necesitemos sean declaradas anteponiendo la palabra "VITE_", Ej: 'VITE_HOST_DB' o 'VITE_USER_NAME', De esta forma __vite__ va a permitirnos acceder a ellas desde el código.
+
+Para acceder a las variables de entorno con __vite__ debemos de ir anidando con sintaxis de punto iniciando desde el objeto principal `import.meta.env.[VITE_NAME_VARIABLE]`.

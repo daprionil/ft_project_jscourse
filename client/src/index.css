@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind components;
+@tailwind utilities;
+@tailwind base;
+
+@layer base{
+    *{
+        font-family: 'Montserrat', sans-serif;
+    }
+}
+@layer components{
+    .btn{
+        @apply w-min border px-3 py-2 rounded font-semibold hover:shadow-xl duration-300 transition ease-in cursor-pointer
+    }
+}
