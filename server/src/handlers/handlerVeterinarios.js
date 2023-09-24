@@ -100,16 +100,21 @@ const passwordToReset = async (req,res) => {
         if(!veterinario) throw CustomError.NotFoundError('Email no encontrado');
 
         //! Set token in user
-        await setTokenVeterinario(veterinario.id);
+        const veterinarioWithTokenId = await setTokenVeterinario(veterinario.id);
 
         //? Send email to reset password with token id
-        sendMail(formatResetPasswordVeterinario({
-            tokenResetPassword: veterinario.token,
-            name: veterinario.name,
-            email: email
-        }));
+        sendMail({
+            mailOptions: formatResetPasswordVeterinario(
+                {
+                    tokenResetPassword: veterinarioWithTokenId.token,
+                    name: veterinario.name,
+                    email: email
+                }
+            )
+        });
 
-        res.json({message: `Hemos enviado los pasos a tu correo ${email}.`});
+        //? Send response with json format
+        res.json({message: `Revisa tu correo, Hemos enviado las instrucciones`});
     } catch ({message, status = 500}) {
         res.status(status).json({error:message});
     };
@@ -117,8 +122,8 @@ const passwordToReset = async (req,res) => {
 
 const validatePassword = async (req,res) => {
     try {
-        const { tokenJWT } = req.params;
-        const veterinarioFind = await findOneVeterinario({token:tokenJWT});
+        const { tokenId } = req.params;
+        const veterinarioFind = await findOneVeterinario({token: tokenId});
         
         if(!veterinarioFind) throw CustomError.NotFoundError('El token no es válido');
         

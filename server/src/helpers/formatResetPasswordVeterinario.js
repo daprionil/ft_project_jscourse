@@ -27,7 +27,7 @@ function formatResetPasswordVeterinario({
                 </div>
                 <div>
                     <a
-                        href="${process.env.CLIENT_URL_DEPLOY}/password/${tokenResetPassword}"
+                        href="${process.env.CLIENT_URL_DEPLOY}/resetpassword/${tokenResetPassword}"
                         rel="noopener noreferrer"
                         class="btn_confirm"
                         style="font-weight: bold"
