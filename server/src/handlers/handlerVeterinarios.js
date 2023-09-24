@@ -9,7 +9,8 @@ const findOneVeterinario = require("../controllers/findOneVeterinario.js");
 const editVeterinario = require("../controllers/editVeterinario.js");
 const clearTokenVeterinario = require("../controllers/clearTokenVeterinario.js");
 const sendMail = require('../controllers/sendMail.js');
-const formatPostRegisterVeterinario = require('../helpers/formatPostRegisterVeterinario.js');
+const formatConfirmVeterinario = require('../helpers/formatConfirmVeterinario.js');
+const formatResetPasswordVeterinario = require("../helpers/formatResetPasswordVeterinario.js");
 
 
 const register = async (req,res) => {
@@ -22,7 +23,7 @@ const register = async (req,res) => {
 
         //? Send Email to confirm with veterinario token
         sendMail({
-            mailOptions: formatPostRegisterVeterinario(
+            mailOptions: formatConfirmVeterinario(
                 {
                     email,
                     name,
@@ -100,6 +101,13 @@ const passwordToReset = async (req,res) => {
 
         //! Set token in user
         await setTokenVeterinario(veterinario.id);
+
+        //? Send email to reset password with token id
+        sendMail(formatResetPasswordVeterinario({
+            tokenResetPassword: veterinario.token,
+            name: veterinario.name,
+            email: email
+        }));
 
         res.json({message: `Hemos enviado los pasos a tu correo ${email}.`});
     } catch ({message, status = 500}) {
