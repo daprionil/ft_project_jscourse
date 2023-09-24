@@ -349,7 +349,60 @@ Para comenzar a crear las rutas debemos de hacer uso de un componente y subcompo
     export default App;
 ```
 
-## Envío de Emails desde el Frontend
+- Hooks de React Router: Los hooks permiten acceder a funcionalidades ancladas al ciclo de vida o estado de nueva aplicación, siendo estos ejecutados en componentes de función.
+    - useParams: nos permite acceder con un objeto, a los parámetros definidos en la ruta dinámica configurada. Hace referencia a la forma de tomar un valor con una ruta dinámica.
+
+## Envío de Emails
 Herramientas:
 - mailtrap: Es un entorno de recepción, envío y control de peticiones SMTP para correos electrónicos, permite que no se traten como un spam si no que sean tomados de forma válida.
-- nodemailer: Es una librería de _nodejs_ para el envío de mensajes por medio del protocolo smtp
+
+Nos vamos registrar y al iniciar sesión, crearémos un _box de testing_ con la configuración para __nodejs__.
+
+mailtrap nos va a proveer de un código de Javascript para dicho fin.
+```js
+    var transport = nodemailer.createTransport({
+        host: "sandbox.io",
+        port: 5050,
+        auth: {
+            user: "example",
+            pass: "example"
+        }
+    });
+```
+- nodemailer: Es una librería de _nodejs_ para el envío de mensajes por medio del protocolo _SMTP_.
+Para comenzar con esta librería y crear un servicio para el envío de emails vamos tener que seguir las siguientes instrucciones.
+    - **Generar un transporte**: Podemos hacerlo por medio de un método que tiene _nodemailer_ el cual nos retorna un objeto configurado para el envío de Emails desde este, este transporte nos permite enviar por medio de un método la solicitud _SMTP_.
+    
+    ```js
+        const nodemailer = require('nodemailer');
+
+        const tranporter = nodemailer.createTransport({// Recibe un objeto de configuración con el siguiente formato
+            host: <YOUR HOST SMTP SERVICE>,
+            port: <YOUR PORT SMTP SERVICE>,
+            auth:{
+                user: <YOUR USER SMTP SERVICE>,
+                pass: <YOUR HOST SMTP SERVICE>
+            }
+        });
+
+        module.exports = transporter;
+    ```
+    - **Envío de email**: Vamos a hacer uso del método que nos entrega __transporter__ para enviar un email. Este método no es asincrono si no que funciona por medio de un callback. En su primer argumento solicita un objeto de configuración con el siguiente formato, y seguido en su segundo argumento solicita un _callback_ para ser ejecutado luego de que finalice el proceso de envío.
+    ```js
+        const transporter = require('../transporter.js');
+
+        function sendMail(){
+            transporter.sendMail({
+                from: < Titulo de quien lo envía>,
+                to: <Email que recibe el mail>,
+                subject: <Asunto del mail>,
+                text: < Texto HTML >,
+                html: < Template HTML para el mail>,
+            })
+        }
+    ```
+## Variables de entorno con Vite
+Las variables de entorno en vite tienen su propia configuración y forma de hacer uso de ellas.
+Podemos definir diferentes tipos de archivo siempre con la extension _.env_ y __vite__ lo va a tomar de igual forma, esto lo hace un requisito. Además __vite__ requiere que las variables que necesitemos sean declaradas anteponiendo la palabra "VITE_", Ej: 'VITE_HOST_DB' o 'VITE_USER_NAME', De esta forma __vite__ va a permitirnos acceder a ellas desde el código.
+
+Para acceder a las variables de entorno con __vite__ debemos de ir anidando con sintaxis de punto iniciando desde el objeto principal `import.meta.env.[VITE_NAME_VARIABLE]`.

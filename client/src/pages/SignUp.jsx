@@ -73,18 +73,19 @@ const SignIn = () => {
             return;
         }
         
-        //! Send request to SignIn
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios`, {
+            //! Send request to SignUp
+            await axios.post(`${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios`, {
                 name: valuesForm.name,
                 email: valuesForm.email,
                 password: valuesForm.password
             });
-            console.log(response.data);
+            
             setAlertMessage({
                 msg: `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`,
                 type: ''
             })
+            resetFormValues();
         } catch (error) {
             if(error.code === 'ERR_NETWORK'){
                 setErrorAlert('El servicio no se encuentra disponible, Intentalo más tarde')
