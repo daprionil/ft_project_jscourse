@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { NavLink } from "react-router-dom"
-import axios from "axios";
 
 import { ValidateForms, messageValidationsError } from "../helpers/ValidateForms";
 import Alert from "../components/Alert";
+import clientAxios from "../config/axios";
 
 const initialValue = {
     name: '',
@@ -75,7 +75,7 @@ const SignIn = () => {
         
         try {
             //! Send request to SignUp
-            await axios.post(`${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios`, {
+            await clientAxios.post(`/veterinarios`, {
                 name: valuesForm.name,
                 email: valuesForm.email,
                 password: valuesForm.password

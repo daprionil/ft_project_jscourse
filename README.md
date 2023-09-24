@@ -406,3 +406,20 @@ Las variables de entorno en vite tienen su propia configuración y forma de hace
 Podemos definir diferentes tipos de archivo siempre con la extension _.env_ y __vite__ lo va a tomar de igual forma, esto lo hace un requisito. Además __vite__ requiere que las variables que necesitemos sean declaradas anteponiendo la palabra "VITE_", Ej: 'VITE_HOST_DB' o 'VITE_USER_NAME', De esta forma __vite__ va a permitirnos acceder a ellas desde el código.
 
 Para acceder a las variables de entorno con __vite__ debemos de ir anidando con sintaxis de punto iniciando desde el objeto principal `import.meta.env.[VITE_NAME_VARIABLE]`.
+
+## Axios
+**Axios** es una librería de javascript que funciona de forma **isomofica** _(Permite con el mismo código ser ejecutado en distintos entornos ya sea cliente / servidor )_, Esta funciona como Cliente HTTP el cual funciona por medio de _promesas_ en _javascript_.
+
+- Configuración de **baseAxios** o **URLBase** con Axios:
+    Axios nos permite crear una configuración base con un objeto y apartir de allí hacer uso de este con sus métodos y peticiones HTTP como un cliente:
+    ```js
+        import axios from 'axios';
+
+
+        const axiosCliente = axios.create({
+            baseURL: 'http://localhost:3000/api'
+        });
+
+        export default axiosCliente;
+    ```
+    Desde este punto ya podemos tomar este objeto que nos retorna el método create para enviar peticiones HTTP.
