@@ -150,11 +150,14 @@ const changePassword = async (req,res) => {
         //! If not exist a values
         if(!tokenId || !password) throw CustomError.NotFoundError('No se encuentran los valores requeridos para cambiar contraseña [password, token]');
         
+        //! Validate if token is valid value
+        const validatorTokenId = new generateId().validateTokenId;
+
         //! Get a veterinario
         const veterinario = await findOneVeterinario({token:tokenId});
         
         //! if doesn't exist a veterinario with that tokenId
-        if(!veterinario) throw CustomError.NotFoundError('Token no válido');
+        if(!veterinario && !validatorTokenId(tokenId)) throw CustomError.NotFoundError('Token no válido');
 
         //! If exist veterinario and the client was set a new Password
         await editVeterinario(veterinario.id, {password});
