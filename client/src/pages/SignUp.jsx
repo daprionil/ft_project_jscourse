@@ -83,7 +83,7 @@ const SignIn = () => {
             
             setAlertMessage({
                 msg: `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`,
-                type: ''
+                type: 'success'
             })
             resetFormValues();
         } catch (error) {
