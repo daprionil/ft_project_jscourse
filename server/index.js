@@ -1,5 +1,6 @@
 const server = require('./src/server.js');
 const conectarDB = require('./src/db.js');
+const generateId = require('./src/helpers/generateId.js');
 
 const { PORT_SERVER } = process.env;
 const port = PORT_SERVER || 4000;

@@ -11,6 +11,7 @@ const clearTokenVeterinario = require("../controllers/clearTokenVeterinario.js")
 const sendMail = require('../controllers/sendMail.js');
 const formatConfirmVeterinario = require('../helpers/formatConfirmVeterinario.js');
 const formatResetPasswordVeterinario = require("../helpers/formatResetPasswordVeterinario.js");
+const generateId = require("../helpers/generateId.js");
 
 
 const register = async (req,res) => {
@@ -125,11 +126,16 @@ const validatePassword = async (req,res) => {
         const { tokenId } = req.params;
         const veterinarioFind = await findOneVeterinario({token: tokenId});
         
-        if(!veterinarioFind) throw CustomError.NotFoundError('El token no es válido');
-        
+        //! Validate if token is valid value
+        const validatorTokenId = new generateId().validateTokenId;
+
+        //! Response with json values to inform the user
+        const confirmedValidation = !!veterinarioFind && validatorTokenId(tokenId);
         res.json({
-            confirmed: true,
-            msg: 'Token válido, puedes continuar'
+            confirmed: confirmedValidation,
+            msg: confirmedValidation
+                ? 'Token válido, puedes continuar'
+                : 'Token inválido, verifica el enlace de tu email'
         });
     } catch ({message, status = 500}) {
         res.status(status).json({error:message});
