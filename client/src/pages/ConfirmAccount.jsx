@@ -29,7 +29,7 @@ const ConfirmAccount = () => {
                 if(response.status === 200){
                     setConfirmState({
                         msg: response.data.message,
-                        type: null
+                        type: 'success'
                     });
                     //* Change confirmedAccount
                     setConfirmedAccount(true);
@@ -46,7 +46,7 @@ const ConfirmAccount = () => {
             })
             // clear loading
             .finally(() => setLoading(false));
-    },[token]);
+    },[]);
 
     return (
         <>
