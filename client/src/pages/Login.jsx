@@ -4,17 +4,34 @@ import { useState } from "react";
 import { ValidateForms } from "../helpers/ValidateForms";
 import clientAxios from "../config/axios";
 import Loader from "../components/Loader";
+import Alert from "../components/Alert";
+import useUserAuth from "../hooks/useUserAuth";
 
-
+//* Init values to form values
 const initValuesFormLogin = {
     password: '',
     email: ''
 }
 
+//* Init values to set alert message
+const initAlertMessageValues = {
+    msg: null,
+    type: null
+}
+
 const Login = () => {
-    const [ auth ] = useAuthContext();
+    const user = useUserAuth();
+    const [, setAuth ] = useAuthContext();
+    const [ alertMessage, setAlertMessage ] = useState(initAlertMessageValues);
     const [ valuesFormLogin, setValuesFormLogin ] = useState(initValuesFormLogin);
     const [ loading, setLoading ] = useState(false);
+
+    console.log(user);
+
+    //! Create alertMessage with type error
+    const setErrorAlertMessage = msg => setAlertMessage({msg, type: 'error'});
+    //! clear alertMessage
+    const clearAlertMessage = msg => setAlertMessage(initAlertMessageValues);
 
     //! Change values to login Form
     const handleChangeValuesForm = ({target:{value, name}}) => {
@@ -32,6 +49,7 @@ const Login = () => {
         
         //! If exist empty values
         if(!password || !email){
+            setErrorAlertMessage('Completa todos los campos');
             return;
         }
         
@@ -40,20 +58,28 @@ const Login = () => {
         const validatePassword = ValidateForms['password'](password);
         
         if(!validateEmail || !validatePassword){
+            setErrorAlertMessage('Las credenciales no son válidas');
             return;
         }
 
         //? Send request to login veterinario
         setLoading(true);
+        clearAlertMessage();
         clientAxios.post('/veterinarios/login', { password, email})
             .then(({data}) => {
-
                 //Continous validation
                 if(data.token){
-                    console.log(data.token);
+                    setAuth(data.token);
                 }
             })
-            .catch(console.log)
+            .catch(({response}) => {
+                //! If exist and error from server
+                if(response.data?.error){
+                    setErrorAlertMessage(response.data.error);
+                    return;
+                }
+                setErrorAlertMessage('Ha habido un error inesperado, intentalo de nuevo más tarde')
+            })
             .finally(() => setLoading(false));
     };
 
@@ -93,6 +119,9 @@ const Login = () => {
                                 onChange={handleChangeValuesForm}
                             />
                         </label>
+                        {
+                            alertMessage.msg && <Alert {...alertMessage}/>
+                        }
                         <div className="relative">
                             {
                                 loading ?
