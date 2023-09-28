@@ -1,11 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/AuthProvider";
 import { useState } from "react";
 import { ValidateForms } from "../helpers/ValidateForms";
 import clientAxios from "../config/axios";
 import Loader from "../components/Loader";
 import Alert from "../components/Alert";
-import useUserAuth from "../hooks/useUserAuth";
 
 //* Init values to form values
 const initValuesFormLogin = {
@@ -20,13 +19,11 @@ const initAlertMessageValues = {
 }
 
 const Login = () => {
-    const user = useUserAuth();
     const [, setAuth ] = useAuthContext();
     const [ alertMessage, setAlertMessage ] = useState(initAlertMessageValues);
     const [ valuesFormLogin, setValuesFormLogin ] = useState(initValuesFormLogin);
     const [ loading, setLoading ] = useState(false);
-
-    console.log(user);
+    const navigate = useNavigate();
 
     //! Create alertMessage with type error
     const setErrorAlertMessage = msg => setAlertMessage({msg, type: 'error'});
@@ -70,6 +67,8 @@ const Login = () => {
                 //Continous validation
                 if(data.token){
                     setAuth(data.token);
+                    //! Send the user to admin profile
+                    navigate('/admin')
                 }
             })
             .catch(({response}) => {

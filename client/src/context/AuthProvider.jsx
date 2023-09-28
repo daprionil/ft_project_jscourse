@@ -28,12 +28,10 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const token = initialAuthState();
-        if(token){
-            setAuth({
-                confirm: true,
-                token
-            });
-        }
+        setAuth({
+            confirm: !!token,
+            token: token || null
+        });
     },[]);
 
     return (
