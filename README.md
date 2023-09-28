@@ -425,4 +425,4 @@ Para acceder a las variables de entorno con __vite__ debemos de ir anidando con 
     Desde este punto ya podemos tomar este objeto que nos retorna el método create para enviar peticiones HTTP.
 
 ## Context API
-**Context API** hace parte de las funciones nativas de la librería de javascript el cual nos permite generar contextos o entornos en los cuales vamos a poder acceder a valores desde un mismo punto evitando así el _propdrilling_
+**Context API** hace parte de las funciones nativas de la librería de javascript el cual nos permite generar contextos o entornos en los cuales vamos a poder acceder a valores desde un mismo punto evitando así el _propdrilling_.

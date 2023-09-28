@@ -68,16 +68,16 @@ const authVeterinario = async (req,res) => {
         if(!existsVeterinario){
             throw CustomError.NotFoundError('El usuario no existe');
         };
-
-        //! Validate if the veterinario is confirmed
-        if(!existsVeterinario.confirm){
-            throw CustomError.AuthorizationError("Tu cuenta no está confirmada");
-        };
-
+        
         //! Validate credentials of veterinario
         const passwordValidation = await existsVeterinario.comparePassword(password);
         if(!passwordValidation){
             throw CustomError.AuthorizationError("La contraseña no es correcta");
+        };
+        
+        //! Validate if the veterinario is confirmed
+        if(!existsVeterinario.confirm){
+            throw CustomError.AuthorizationError("Tu cuenta no está confirmada");
         };
 
         //! Generate JWT and response
