@@ -3,26 +3,27 @@ import { useAuthContext } from "../context/AuthProvider"
 import Loader from "./Loader";
 import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRouteByAuth = ({children}) => {
-    const [auth] = useAuthContext();
+const PrivateRouteByAuth = ({Layout}) => {
+    const {confirm} = useAuthContext();
     const [ loading, setLoading ] = useState(true);
 
     useEffect(() => {
         setLoading(true);
-        if(auth !== null){
+        if(confirm !== null){
             setLoading(false);
         }
-    },[auth]);
+    },[confirm]);
 
     return (
         <div>
             {
                 loading ?
                     <Loader />
-                : auth ?
+                : confirm ?
                     <>
-                        {children}
-                        <Outlet/>
+                        <Layout>
+                            <Outlet />
+                        </Layout>
                     </>
                     : <Navigate to='/'/>
             }

@@ -1,12 +1,18 @@
-import { Outlet } from "react-router-dom"
+import Footer from "../components/Footer"
+import Header from "../components/Header"
 
-
-const ProfileLayout = () => {
-  return (
-    <div>
-        eso state
-    </div>
-  )
+const ProfileLayout = ({children}) => {
+    return (
+        <>
+            <Header/>
+            <main className="container mx-auto mt-10">
+                {
+                    children
+                }
+            </main>
+            <Footer />
+        </>
+    )
 }
 
 export default ProfileLayout

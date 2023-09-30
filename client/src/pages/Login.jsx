@@ -19,7 +19,7 @@ const initAlertMessageValues = {
 }
 
 const Login = () => {
-    const [, setAuth ] = useAuthContext();
+    const {dispatch} = useAuthContext();
     const [ alertMessage, setAlertMessage ] = useState(initAlertMessageValues);
     const [ valuesFormLogin, setValuesFormLogin ] = useState(initValuesFormLogin);
     const [ loading, setLoading ] = useState(false);
@@ -28,7 +28,7 @@ const Login = () => {
     //! Create alertMessage with type error
     const setErrorAlertMessage = msg => setAlertMessage({msg, type: 'error'});
     //! clear alertMessage
-    const clearAlertMessage = msg => setAlertMessage(initAlertMessageValues);
+    const clearAlertMessage = () => setAlertMessage(initAlertMessageValues);
 
     //! Change values to login Form
     const handleChangeValuesForm = ({target:{value, name}}) => {
@@ -66,7 +66,7 @@ const Login = () => {
             .then(({data}) => {
                 //Continous validation
                 if(data.token){
-                    setAuth(data.token);
+                    dispatch(data.token);
                     //! Send the user to admin profile
                     navigate('/admin')
                 }

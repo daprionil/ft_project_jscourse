@@ -8,6 +8,7 @@ import ChangePassword from "./pages/ChangePassword";
 import PrivateRouteByAuth from "./components/PrivateRouteByAuth";
 import ProfileLayout from "./layouts/ProfileLayout";
 import NotFound404 from "./pages/NotFound404";
+import AdminPacientes from "./pages/AdminPacientes";
 
 function App() {
     return (
@@ -19,8 +20,8 @@ function App() {
                 <Route path="resetpassword" element={<ChangePasswordRequest />} />
                 <Route path="resetpassword/:tokenId" element={<ChangePassword />} />
             </Route>
-            <Route path="/admin" element={<PrivateRouteByAuth><ProfileLayout/></PrivateRouteByAuth>}>
-                <Route index element={<p>Main</p>} />
+            <Route path="/admin" element={<PrivateRouteByAuth Layout={ProfileLayout}/>}>
+                <Route index element={<AdminPacientes/>} />
                 <Route path="" element={<p></p>} />
                 <Route path="" element={<p></p>} />
             </Route>

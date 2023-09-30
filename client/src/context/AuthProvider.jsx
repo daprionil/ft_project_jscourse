@@ -11,13 +11,15 @@ const initialAuthState = () => {
 
 //? Generate Actions
 const setAuthToken = val => localStorage.setItem(import.meta.env.VITE_TOKEN_SECRET_STORAGENAME, val);
+const clearAuthToken = () => localStorage.removeItem(import.meta.env.VITE_TOKEN_SECRET_STORAGENAME);
 
 const AuthProvider = ({ children }) => {
-    const [ auth, setAuth] = useState({
+    const [ auth, setAuth ] = useState({
         confirm: null,
         token: null
     });
     
+    //! Change value token to validate user
     const changeAuth = token => {
         setAuth(() => ({
             confirm: true,
@@ -25,7 +27,16 @@ const AuthProvider = ({ children }) => {
         }));
         setAuthToken(token);
     };
+    //! Log Out User or remove token to localstorage of user
+    const logOut = () => {
+        setAuth({
+            confirm: null,
+            token: null
+        });
+        clearAuthToken();
+    };
 
+    //! Execute this when the app started
     useEffect(() => {
         const token = initialAuthState();
         setAuth({
@@ -35,7 +46,16 @@ const AuthProvider = ({ children }) => {
     },[]);
 
     return (
-        <AuthContext.Provider value={[auth.confirm, changeAuth, auth.token]}>
+        <AuthContext.Provider
+            value={
+                {
+                    confirm: auth.confirm,
+                    dispatch: changeAuth,
+                    authToken: auth.token,
+                    logOut
+                }
+            }
+        >
             {
                 children
             }

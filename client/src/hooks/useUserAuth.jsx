@@ -3,21 +3,21 @@ import { useAuthContext } from "../context/AuthProvider";
 import clientAxios from "../config/axios";
 
 const useUserAuth = () => {
-    const [,,token] = useAuthContext();
+    const {authToken} = useAuthContext();
     const [user, setUser] = useState();
 
     useEffect(() => {
-        //! Get profile user by token
-        if(token){
+        //! Get profile user by authToken
+        if(authToken){
             clientAxios('/veterinarios/profile', {
                 headers:{
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${authToken}`
                 }
             })
             .then(({data}) => setUser(data.profile))
         }
-    },[token]);
+    },[authToken]);
 
     return user;
 };
