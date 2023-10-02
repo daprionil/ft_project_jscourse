@@ -12,6 +12,7 @@ const createPaciente = async ( authToken, {name,owner,email,description,dateUp,p
         idVeterinario
     }, {
         headers:{
+            'Content-Type':'application/json',
             Authorization: `Bearer ${authToken}`
         }
     })

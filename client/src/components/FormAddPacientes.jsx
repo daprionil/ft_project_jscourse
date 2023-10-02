@@ -75,8 +75,7 @@ const FormAddPacientes = () => {
                     //! Reset form
                     resetValuesForm();
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(() => {
                     setErrorAlertMessage('Ha habido un error, intenta de nuevo más tarde');
                 })
                 .finally(() => setLoading(false));//? Clear loading form

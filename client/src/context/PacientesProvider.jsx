@@ -13,7 +13,14 @@ const PacientesProvider = ({children}) => {
     const { authToken } = useAuthContext();
     const [pacientes, setPacientes] = useState([]);
 
-    const addPaciente = (data) => createPaciente(authToken, data);
+    //? Add new Paciente in the state
+    const addPaciente = async (data) => {
+        const response = await createPaciente(authToken, data);
+        setPacientes(state => ([
+            ...state,
+            response.data
+        ]))
+    };
 
     //? When the stars app this provider will be request the pacientes by token
     useEffect(() => {
