@@ -1,6 +1,8 @@
 import { useState } from "react"
 import Alert from "./Alert";
 import { ValidateForms } from "../helpers/ValidateForms";
+import Loader from "./Loader";
+import { usePacientesContext } from "../context/PacientesProvider";
 
 const initValuesFormAddPacientes = {
     petname: '',
@@ -13,6 +15,7 @@ const initValuesFormAddPacientes = {
 const initAlertValues = {msg: null, type: null};
 
 const FormAddPacientes = () => {
+    const { addPaciente } = usePacientesContext();
     const [ valuesForm, setValuesForm ] = useState(initValuesFormAddPacientes);
     const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
     const [ loading, setLoading ] = useState(false);
@@ -27,6 +30,7 @@ const FormAddPacientes = () => {
         ...state,
         [name]: value
     }));
+    const resetValuesForm = () => setValuesForm(initValuesFormAddPacientes);
 
     //! Submit form to create an paciente
     const handleSubmit = evt => {
@@ -46,6 +50,41 @@ const FormAddPacientes = () => {
             return;
         }
 
+        //! Send request to create a new Paciente
+        try {
+            const dataNewPaciente = {
+                name: valuesForm.petname,
+                owner: valuesForm.owner,
+                email: valuesForm.emailOwner,
+                description: valuesForm.sintomas,
+                dateUp: valuesForm.dateUp,
+            }
+
+            //? Start loading form
+            setLoading(true);
+
+            //? Generate request to generate a new paciente
+            addPaciente(dataNewPaciente)
+                .then(() => {
+                    //? Set success alert
+                    setAlertMessage({
+                        msg: 'El paciente ha sido creado correctamente',
+                        type: 'success'
+                    });
+
+                    //! Reset form
+                    resetValuesForm();
+                })
+                .catch(err => {
+                    console.log(err);
+                    setErrorAlertMessage('Ha habido un error, intenta de nuevo más tarde');
+                })
+                .finally(() => setLoading(false));//? Clear loading form
+
+            setSuccessAlertMessage('Su paciente se creado exitosamente');
+        } catch (error) {
+            console.log(error);
+        }
         clearAlertMessage();
     };
 
@@ -117,13 +156,17 @@ const FormAddPacientes = () => {
                             alertMessage.msg && <Alert {...alertMessage} />
                         }
                     </label>
-                    <label htmlFor="btnsubmit">
-                        <button
-                            type="submit"
-                            id="btnsubmit"
-                            style={{ background: '#4f46e5' }}
-                            className="w-full btn shadow-sm text-white font-bold"
-                        >Agregar paciente</button>
+                    <label className="relative" htmlFor="btnsubmit">
+                        {
+                            loading ?
+                                <Loader />
+                            : <button
+                                type="submit"
+                                id="btnsubmit"
+                                style={{ background: '#4f46e5' }}
+                                className="w-full btn shadow-sm text-white font-bold"
+                            >Agregar paciente</button>
+                        }
                     </label>
                 </div>
             </form>

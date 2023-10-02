@@ -2,7 +2,7 @@ import { useState } from 'react'
 import FormAddPacientes from '../components/FormAddPacientes'
 
 const AdminPacientes = () => {
-    const [ displayForm, setDisplayForm ] = useState();
+    const [ displayForm, setDisplayForm ] = useState(true);
 
     return (
         <div className="flex flex-col gap-4 md:flex-row">
