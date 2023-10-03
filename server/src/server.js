@@ -9,7 +9,7 @@ const server = express();
 
 //! Whitelist cors to enabled request
 const whiteListCors = [
-    'http://localhost:5173'
+    process.env.CLIENT_URL_DEPLOY
 ]
 const corsOptions = {
     origin: function(origin, callback){

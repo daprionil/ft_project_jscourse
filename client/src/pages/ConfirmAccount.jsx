@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useParams } from "react-router-dom"
 import Alert from "../components/Alert";
 import Loader from "../components/Loader";
+import clientAxios from "../config/axios";
 
 
 const ConfirmAccount = () => {
@@ -23,14 +23,13 @@ const ConfirmAccount = () => {
         setLoading(true);
         
         //! Send request to confirm Account
-        const url = `${import.meta.env.VITE_API_URL_SERVER}/api/veterinarios/confirm/${token}`;
-        axios.get(url)
+        clientAxios.get(`veterinarios/confirm/${token}`)
             .then((response) => {
                 //* If the response sucess with 200 - confirmed Account succesful
                 if(response.status === 200){
                     setConfirmState({
                         msg: response.data.message,
-                        type: null
+                        type: 'success'
                     });
                     //* Change confirmedAccount
                     setConfirmedAccount(true);
@@ -47,7 +46,7 @@ const ConfirmAccount = () => {
             })
             // clear loading
             .finally(() => setLoading(false));
-    },[token]);
+    },[]);
 
     return (
         <>

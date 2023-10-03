@@ -2,7 +2,7 @@ const transportEmail = require('../transportEmail.js');
 
 //! Send mail
 const sendMail = async ({mailOptions}) => {
-    transportEmail.sendMail(mailOptions, console.log);
+    transportEmail.sendMail(mailOptions);
 }
 
 module.exports = sendMail;
