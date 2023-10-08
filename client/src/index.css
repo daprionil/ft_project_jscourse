@@ -4,13 +4,18 @@
 @tailwind utilities;
 @tailwind base;
 
-@layer base{
-    *{
-        font-family: 'Montserrat', sans-serif;
-    }
-}
 @layer components{
     .btn{
-        @apply w-min border px-3 py-2 rounded font-semibold hover:shadow-xl duration-300 transition ease-in cursor-pointer
+        @apply w-min border px-3 py-2 rounded font-semibold hover:shadow-xl duration-300 transition ease-in cursor-pointer whitespace-nowrap;
+        background-color: none !important;
+    }
+}
+
+@layer base{
+    html{
+        scroll-behavior: smooth;
+    }
+    *{
+        font-family: 'Montserrat', sans-serif;
     }
 }
