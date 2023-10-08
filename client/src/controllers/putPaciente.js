@@ -1,6 +1,6 @@
 import clientAxios from "../config/axios";
 
-const updatePaciente = async (bearerToken, {idPaciente, dataPaciente:{
+const updatePaciente = (bearerToken, {idPaciente, dataPaciente:{
     name,owner,email,description,dateUp
 }}) => {
     return clientAxios.put(`/pacientes/${idPaciente}`,{

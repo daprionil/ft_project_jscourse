@@ -3,6 +3,7 @@ import { useAuthContext } from "./AuthProvider"
 import clientAxios from "../config/axios";
 import createPaciente from "../controllers/createPaciente";
 import putPaciente from "../controllers/putPaciente";
+import deletePaciente from "../controllers/deletePaciente";
 
 //! Create context
 const pacienteContext = createContext();
@@ -30,7 +31,7 @@ const PacientesProvider = ({children}) => {
         ]))
     };
 
-    //? Add new Paciente in the state
+    //? update a Paciente in the state
     const updatePaciente = async (idPaciente, dataPaciente) => {
         const response = await putPaciente(authToken, {idPaciente, dataPaciente});
         
@@ -46,6 +47,19 @@ const PacientesProvider = ({children}) => {
                 return paciente;
             });
         });
+    };
+
+    //? Delete paciente and delete in the array state pacientes
+    const removePaciente = async idPaciente =>  {
+        //? Send request with clientAxios to delete a paciente
+        const {status, data} = await deletePaciente(authToken, {idPaciente});
+        
+        //? If the deletion is successful then filter the status array without that patient
+        if(status === 200 && data?.removed){
+            setPacientes(state => state.filter(paciente => (
+                paciente._id !== idPaciente
+            )));
+        }
     };
 
     //? Set edit mode in form
@@ -82,7 +96,8 @@ const PacientesProvider = ({children}) => {
             pacienteForm,
             setEditPaciente,
             modeForm,
-            clearEditMode
+            clearEditMode,
+            removePaciente
         }}>
             {
                 children

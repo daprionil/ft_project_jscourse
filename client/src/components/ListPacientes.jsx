@@ -2,10 +2,17 @@ import { usePacientesContext } from "../context/PacientesProvider"
 import PacienteCard from "./PacienteCard"
 
 const ListPacientes = ({ pacientes }) => {
-    const { setEditPaciente } = usePacientesContext();
+    const { setEditPaciente, removePaciente } = usePacientesContext();
 
     const pacienteToEdit = (paciente) => {
         setEditPaciente(paciente);
+    };
+
+    const pacienteToRemove = paciente => {
+        const confirmRemove = confirm(`¿Estás seguro de que quieres eliminar a ${paciente.name} de tus pacientes?`)
+        if(confirmRemove){
+            removePaciente(paciente._id);
+        }
     };
 
     return (
@@ -23,6 +30,7 @@ const ListPacientes = ({ pacientes }) => {
                                     key={paciente._id}
                                     paciente={paciente}
                                     editPaciente={pacienteToEdit}
+                                    removePaciente={pacienteToRemove}
                                 />
                             ))
                         }

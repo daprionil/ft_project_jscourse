@@ -1,6 +1,6 @@
 import formatDate from "../helpers/formatDate";
 
-const PacienteCard = ({paciente, editPaciente}) => {
+const PacienteCard = ({paciente, editPaciente, removePaciente}) => {
     const { dateUp, description, email, name, owner } = paciente;
     
     return (
@@ -19,6 +19,7 @@ const PacienteCard = ({paciente, editPaciente}) => {
                 </button>
                 <button
                     className="px-4 py-2 rounded shadow bg-red-600"
+                    onClick={() => removePaciente(paciente)}
                 >
                     Eliminar
                 </button>

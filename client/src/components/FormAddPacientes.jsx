@@ -32,7 +32,9 @@ const FormAddPacientes = () => {
     const setErrorAlertMessage = msg => setAlertMessage({ msg, type: 'error'});
     const setSuccessAlertMessage = msg => {
         const typeSuccess = 'success';
+        
         setAlertMessage({ msg, type: typeSuccess})
+        
         setTimeout(() => {
             if(alertMessage === typeSuccess){
                 clearAlertMessage();
@@ -237,7 +239,7 @@ const FormAddPacientes = () => {
                                     {modeForm ? 'Editar Paciente' : 'Agregar paciente'}
                                 </button>
                                 <button
-                                    className={`${!modeForm ? 'hidden' : 'block'}`}
+                                    className={`${!modeForm ? 'hidden' : 'block'} bg-red-400`}
                                     type="button"
                                     onClick={handleClickCancel}
                                 >
