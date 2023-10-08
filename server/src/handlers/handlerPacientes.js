@@ -98,7 +98,7 @@ async function editPacienteHandler(req,res){
     try {
         const { idPaciente } = req.params;
         const { _id:idVeterinario } = res.locals.veterinario;
-        const {name, owner, email, description, phone} = req.body;
+        const {name, owner, email, description, dateUp} = req.body;
 
         //! If the idPaciente is empty
         if(!idPaciente) throw CustomError.NotFoundError('No hay un id de paciente');
@@ -108,7 +108,7 @@ async function editPacienteHandler(req,res){
         if(!findPaciente) throw CustomError.NotFoundError('No existe un paciente con ese Id');
         
         //! If paciente has the same idVeterinario of the client
-        const validateVeterinarioIdCreatorOfPaciente = idVeterinario.toString() === paciente.idVeterinario.toString();
+        const validateVeterinarioIdCreatorOfPaciente = idVeterinario.toString() === findPaciente.idVeterinario.toString();
         if(!validateVeterinarioIdCreatorOfPaciente) throw CustomError.AuthorizationError('No está autorizado para editar este paciente');
 
         //? Edit paciente
@@ -117,9 +117,9 @@ async function editPacienteHandler(req,res){
             owner,
             email,
             description,
-            phone
+            dateUp
         });
-        
+
         //! If the paciente was not updated
         if(!pacienteUpdated){
             throw CustomError.InternalServerError('Ha ocurrido un error en la base de datos al Intentar actualizar el paciente')
@@ -130,7 +130,9 @@ async function editPacienteHandler(req,res){
             updated: true,
             pacienteUpdated
         });
-    } catch ({status = 500, message}) {
+    } catch (error) {
+        console.log(error);
+        const {status = 500, message} = error;
         res.status(status).json({error: message})
     };
 };
