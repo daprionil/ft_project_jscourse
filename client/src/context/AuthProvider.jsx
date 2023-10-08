@@ -5,7 +5,7 @@ const AuthContext = createContext();
 export const useAuthContext = () => useContext(AuthContext);
 
 //! Create State
-const initialAuthState = () => {
+const getAuthToken = () => {
     return localStorage.getItem(import.meta.env.VITE_TOKEN_SECRET_STORAGENAME) || null
 };
 
@@ -38,7 +38,7 @@ const AuthProvider = ({ children }) => {
 
     //! Execute this when the app started
     useEffect(() => {
-        const token = initialAuthState();
+        const token = getAuthToken();
         setAuth({
             confirm: !!token,
             token: token || null

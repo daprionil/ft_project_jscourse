@@ -1,13 +1,13 @@
 const ModelPaciente = require("../models/Paciente");
 
-async function updatePaciente(idPaciente, {name, owner, email, description, phone}){
+async function updatePaciente(idPaciente, {name, owner, email, description, dateUp}){
     //? Clear empty fields
     const dataValidate = Object.entries({
         name,
         owner,
         email,
         description,
-        phone
+        dateUp
     }).reduce((init, [k,v]) => (
         !!v ? {...init, [k]:v} : init
     ),{});
@@ -22,7 +22,7 @@ async function updatePaciente(idPaciente, {name, owner, email, description, phon
                 select: '-__v'
             }
         );
-        
+
         return paciente;
     } catch (error) {
         console.log(error);
