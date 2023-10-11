@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ValidateForms } from "../helpers/ValidateForms";
 import clientAxios from "../config/axios";
 import Loader from "../components/Loader";
-import Alert from "../components/Alert";
+import Alert, { clearAlertMessage, initAlertValues, setErrorAlertMessage } from "../components/Alert";
 
 //* Init values to form values
 const initValuesFormLogin = {
@@ -12,23 +12,12 @@ const initValuesFormLogin = {
     email: ''
 }
 
-//* Init values to set alert message
-const initAlertMessageValues = {
-    msg: null,
-    type: null
-}
-
 const Login = () => {
     const {dispatch} = useAuthContext();
-    const [ alertMessage, setAlertMessage ] = useState(initAlertMessageValues);
+    const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
     const [ valuesFormLogin, setValuesFormLogin ] = useState(initValuesFormLogin);
     const [ loading, setLoading ] = useState(false);
     const navigate = useNavigate();
-
-    //! Create alertMessage with type error
-    const setErrorAlertMessage = msg => setAlertMessage({msg, type: 'error'});
-    //! clear alertMessage
-    const clearAlertMessage = () => setAlertMessage(initAlertMessageValues);
 
     //! Change values to login Form
     const handleChangeValuesForm = ({target:{value, name}}) => {
@@ -46,7 +35,7 @@ const Login = () => {
         
         //! If exist empty values
         if(!password || !email){
-            setErrorAlertMessage('Completa todos los campos');
+            setErrorAlertMessage(setAlertMessage, 'Completa todos los campos');
             return;
         }
         
@@ -55,13 +44,13 @@ const Login = () => {
         const validatePassword = ValidateForms['password'](password);
         
         if(!validateEmail || !validatePassword){
-            setErrorAlertMessage('Las credenciales no son válidas');
+            setErrorAlertMessage(setAlertMessage, 'Las credenciales no son válidas');
             return;
         }
 
         //? Send request to login veterinario
         setLoading(true);
-        clearAlertMessage();
+        clearAlertMessage(setAlertMessage);
         clientAxios.post('/veterinarios/login', { password, email})
             .then(({data}) => {
                 //Continous validation
@@ -74,10 +63,10 @@ const Login = () => {
             .catch(({response}) => {
                 //! If exist and error from server
                 if(response.data?.error){
-                    setErrorAlertMessage(response.data.error);
+                    setErrorAlertMessage(setAlertMessage, response.data.error);
                     return;
                 }
-                setErrorAlertMessage('Ha habido un error inesperado, intentalo de nuevo más tarde')
+                setErrorAlertMessage(setAlertMessage, 'Ha habido un error inesperado, intentalo de nuevo más tarde')
             })
             .finally(() => setLoading(false));
     };

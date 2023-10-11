@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MenuAdmin from "../components/MenuAdmin";
 import useUserAuth from "../hooks/useUserAuth";
+import Alert, { initAlertValues, setErrorAlertMessage } from "../components/Alert";
 
 const initValuesFormProfile = {
     name: '',
@@ -11,8 +12,27 @@ const initValuesFormProfile = {
 
 const ProfileAdmin = () => {
     const user = useUserAuth();
-
     const [valuesFormProfile, setValuesFormProfile] = useState(initValuesFormProfile);
+    const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
+
+    //! Set values in the form to edit the profile info user
+    const handleChangeValuesForm = ({target:{name, value}}) => {
+        console.log(name, value);
+        setValuesFormProfile( state => ({
+            ...state,
+            [name]: value
+        }));
+    };
+
+    const handleSubmitProfileForm = evt => {
+        evt.preventDefault();
+
+        //!Validate is email or name is empty
+        if(!valuesFormProfile.name || !valuesFormProfile.email){
+            setErrorAlertMessage(setAlertMessage, 'No puedes continuar, completa el nombre y email');
+            return;
+        }
+    };
 
     useEffect(() => {
         if(user){
@@ -34,7 +54,10 @@ const ProfileAdmin = () => {
             </div>
             <div className=" flex justify-center">
                 <div className="w-full md:w-1/2 bg-white shadow rounded-lg p-5">
-                    <form className="flex gap-3 flex-wrap [&>label]:block [&>label>p]:mb-4 [&>label]:w-full [&>label]:mx-auto">
+                    <form
+                        className="flex gap-3 flex-wrap [&>label]:block [&>label>p]:mb-4 [&>label]:w-full [&>label]:mx-auto"
+                        onSubmit={handleSubmitProfileForm}
+                    >
                         <label className="uppercase font-bold text-gray-600">
                             <p>Nombre</p>
                             <input
@@ -42,6 +65,7 @@ const ProfileAdmin = () => {
                                 placeholder="Tu nombre de perfil"
                                 className="w-full bg-none border-none shadow"
                                 name="name"
+                                onChange={handleChangeValuesForm}
                                 value={valuesFormProfile.name}
                             />
                         </label>
@@ -52,6 +76,7 @@ const ProfileAdmin = () => {
                                 placeholder="Tu sitio web"
                                 className="w-full bg-none border-none shadow"
                                 name="website"
+                                onChange={handleChangeValuesForm}
                                 value={valuesFormProfile.website}
                             />
                         </label>
@@ -62,6 +87,7 @@ const ProfileAdmin = () => {
                                 placeholder="Escribe tú Teléfono"
                                 className="w-full bg-none border-none shadow"
                                 name="phoneNumber"
+                                onChange={handleChangeValuesForm}
                                 value={valuesFormProfile.phoneNumber}
                             />
                         </label>
@@ -72,9 +98,13 @@ const ProfileAdmin = () => {
                                 className="w-full bg-none border-none shadow"
                                 placeholder="Tú Email"
                                 name="email"
+                                onChange={handleChangeValuesForm}
                                 value={valuesFormProfile.email}
                             />
                         </label>
+                        {
+                            alertMessage.msg && <Alert {...alertMessage}/>
+                        }
                         <label className="uppercase font-bold text-gray-600">
                             <input
                                 type="submit"

@@ -11,6 +11,37 @@ const Alert = ({ msg, type = 'error' }) => {
             {msg}
         </div>
     )
-}
+};
 
+//! Alert methods
+//* Init values to set alert message
+const initAlertValues = {msg: null, type: null};
+
+const TIME_CLEAR_ALERT = 3000;
+
+const clearAlertMessage = (setState) => setState(initAlertValues);
+const setErrorAlertMessage = (setState, msg) => setState({ msg, type: 'error'});
+const setSuccessAlertMessage = (state, setState, msg) => {
+    const typeSuccess = 'success';
+    setState({ msg, type: typeSuccess})
+    
+    setTimeout(() => {
+        //! This clear the state to remove alert
+        setState(state => {
+            if(state.type === typeSuccess){
+                return initAlertValues;
+            }
+            return state;
+        });
+    }, TIME_CLEAR_ALERT);
+};
+
+export {
+    clearAlertMessage,
+    setErrorAlertMessage,
+    setSuccessAlertMessage,
+    initAlertValues
+};
+
+//! Export main component of this document
 export default Alert;

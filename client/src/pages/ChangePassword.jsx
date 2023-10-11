@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom"
 import clientAxios from "../config/axios";
 import Loader from "../components/Loader";
-import Alert from "../components/Alert";
+import Alert, { initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "../components/Alert";
 import { ValidateForms } from "../helpers/ValidateForms";
 
 
@@ -12,17 +12,11 @@ const initValuesForm = {
     repeatPassword:'',
 };
 
-//? Initialization values to AlertMessage
-const initValuesAlert = {
-    msg: null,
-    type: null
-};
-
 const ChangePassword = () => {
     const { tokenId } = useParams();
     
     const [ valuesFormChangePassword, setValuesFormChangePassword ] = useState(initValuesForm);
-    const [ alertMessage, setAlertMessage ] = useState(initValuesAlert);
+    const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
     const [ validateToken, setValidationToken ] = useState(false);
     const [ loading, setLoading ] = useState(false);
     
@@ -43,28 +37,19 @@ const ChangePassword = () => {
 
         //! Validate empty form fields
         if(!pass && !pass2){
-            setAlertMessage({
-                msg: 'Debes de completar todos los campos',
-                type: 'error'
-            });
+            setErrorAlertMessage(setAlertMessage, 'Debes de completar todos los campos')
             return
         }
         
         //! If the password have a invalid format
         if(!ValidateForms['password'](pass)){
-            setAlertMessage({
-                msg: 'Contraseña insegura, intenta con otra. Ej: passW23##',
-                type: 'error'
-            });
+            setErrorAlertMessage(setAlertMessage, 'Contraseña insegura, intenta con otra. Ej: passW23##')
             return;
         }
 
         //! If the passwords are not the same
         if(pass !== pass2){
-            setAlertMessage({
-                msg: 'Tus contraseñas no son iguales',
-                type: 'error'
-            });
+            setErrorAlertMessage(setAlertMessage, 'Tus contraseñas no son iguales')
             return;
         }
 
@@ -74,19 +59,13 @@ const ChangePassword = () => {
         }).then(({data}) => {
             //? If the password was changed successfull
             if(data.changed){
-                setAlertMessage({
-                    msg:'Tu contraseña se ha cambiado exitosamente',
-                    type: 'success'
-                })
+                setSuccessAlertMessage(alertMessage, setAlertMessage, 'Tu contraseña se ha cambiado exitosamente');
             }
             setValuesFormChangePassword(initValuesForm);
         })
         .catch(() => {
             //! Set server error
-            setAlertMessage({
-                msg: 'Ha habido un problema, Intentalo más tarde',
-                type: 'error'
-            })
+            setErrorAlertMessage(setAlertMessage, 'Ha habido un problema, Intentalo más tarde')
         })
     }
 
@@ -107,24 +86,15 @@ const ChangePassword = () => {
                     //! Set value of validation
                     setValidationToken(confirmed);
                     //! Succes alert
-                    setAlertMessage({
-                        msg:'Validado, puedes cambiar tu contraseña',
-                        type: 'success'
-                    })
+                    setSuccessAlertMessage(alertMessage, setAlertMessage, 'Validado, puedes cambiar tu contraseña');
                     return;
                 }
                 //! Not confirmed tokenId
-                setAlertMessage({
-                    msg: 'Acción no válida, verifica el enlace de tu email',
-                    type: 'error'
-                })
+                setErrorAlertMessage(setAlertMessage, 'Acción no válida, verifica el enlace de tu email')
             })
             .catch(() => {
                 //! Set server error
-                setAlertMessage({
-                    msg: 'Ha habido un problema, Intentalo más tarde',
-                    type: 'error'
-                })
+                setErrorAlertMessage(setAlertMessage, 'Ha habido un problema, Intentalo más tarde')
             })
             .finally(() => {
                 //! Finish loading
