@@ -7,7 +7,7 @@ const {
     passwordToReset,
     validatePassword,
     changePassword,
-
+    editProfile
 } = require('../handlers/handlerVeterinarios.js');
 const authMiddleware = require('../helpers/authMiddleware.js');
 
@@ -33,7 +33,8 @@ const veterinarioRouter = Router();
     veterinarioRouter.get('/confirm/:tokenId', confirmAccount);
 
     //! Private routes
-    //? Valida token y retorna profile
-    veterinarioRouter.get('/profile', authMiddleware, profile);
+    veterinarioRouter.route('/profile')
+                    .get(authMiddleware, profile)//? Valida token y retorna profile
+                    .put(authMiddleware, editProfile);//? Valida el token y modifica el usuario
 
 module.exports = veterinarioRouter;

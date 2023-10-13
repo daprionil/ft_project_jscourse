@@ -12,6 +12,8 @@ const sendMail = require('../controllers/sendMail.js');
 const formatConfirmVeterinario = require('../helpers/formatConfirmVeterinario.js');
 const formatResetPasswordVeterinario = require("../helpers/formatResetPasswordVeterinario.js");
 const generateId = require("../helpers/generateId.js");
+const updateVeterinario = require("../controllers/updateVeterinario.js");
+const findVeterinarioById = require("../controllers/findVeterinarioById.js");
 
 
 const register = async (req,res) => {
@@ -178,6 +180,24 @@ const profile = (req,res) => {
     res.json({profile: veterinario});
 };
 
+const editProfile = async (req,res) => {
+    try {
+        const { veterinario } = res.locals;
+        const {name, email, phoneNumber, website} = req.body;
+
+        //! Validate if the user exist
+        const validation = await findVeterinarioById(veterinario);
+        if(!validation){
+            throw CustomError.NotFoundError('No existe un veterinario para ese tokenJWT');
+        }
+
+        const response = await updateVeterinario(veterinario, {name, email, phoneNumber,website});
+        res.json(response);
+    } catch ({status = 500, msg}) {
+        res.status(status).json({error:msg});
+    }
+}
+
 
 module.exports = {
     register,
@@ -186,5 +206,6 @@ module.exports = {
     authVeterinario,
     passwordToReset,
     validatePassword,
-    changePassword
+    changePassword,
+    editProfile
 }
