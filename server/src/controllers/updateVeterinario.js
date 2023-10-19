@@ -9,7 +9,7 @@ const updateVeterinario = async (idVeterinario, {name, email, phoneNumber,websit
                 email,
                 website
             }
-        ).filter(([, val = '']) => val.trim())
+        ).map(([key, val]) => [key,val])
     );
 
     //! Find by id and update data to that veterinario

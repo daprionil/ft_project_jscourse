@@ -16,7 +16,10 @@ const useUserAuth = () => {
                 }
             })
             .then(({data}) => setUser(data.profile))
+            return;
         }
+        //! If not exist a token
+        setUser({})
     },[authToken]);
 
     return user;
