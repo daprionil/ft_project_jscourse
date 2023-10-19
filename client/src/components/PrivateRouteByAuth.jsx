@@ -4,7 +4,7 @@ import Loader from "./Loader";
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRouteByAuth = ({Layout}) => {
-    const {confirm} = useAuthContext();
+    const { confirm } = useAuthContext();
     const [ loading, setLoading ] = useState(true);
 
     useEffect(() => {

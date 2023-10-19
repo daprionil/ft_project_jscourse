@@ -2,7 +2,7 @@ import { useState } from "react"
 import { NavLink } from "react-router-dom"
 
 import { ValidateForms, messageValidationsError } from "../helpers/ValidateForms";
-import Alert from "../components/Alert";
+import Alert, { initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "../components/Alert";
 import clientAxios from "../config/axios";
 
 const initialValue = {
@@ -12,20 +12,12 @@ const initialValue = {
     email: '',
 };
 
-const initialValueAlert = {msg: null, type: null};
-
 const SignIn = () => {
     const [ valuesForm, setValuesForm ] = useState(initialValue);
-    const [ alertMessage, setAlertMessage ] = useState(initialValueAlert);
+    const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
 
     //? This function will be clear state to form values
     const resetFormValues = () => setValuesForm(initialValue);
-
-    //? Set error to alert message
-    const setErrorAlert = (msg) => setAlertMessage({msg, type: 'error'});
-
-    //? Reset and Clear Alert
-    const clearAlert = () => setAlertMessage(initialValueAlert);
 
     //! Set values of valuesForm to state
     const handleChangeValuesForm = ({target:{value,name}}) => {
@@ -45,7 +37,7 @@ const SignIn = () => {
         
         //! Validate if exist empty fields
         const validateEmptyFields = listFieldValuesForm.filter(([k,v]) => !v.trim());
-        if(validateEmptyFields.length) return setErrorAlert('Completa todos los campos');
+        if(validateEmptyFields.length) return setErrorAlertMessage(setAlertMessage, 'Completa todos los campos');
 
         //! Validate fields with regex
         for(let [name, value] of listFieldValuesForm){
@@ -54,7 +46,7 @@ const SignIn = () => {
                 const resultValidation = existValidation(value);
                 if(!resultValidation){
                     //! Set error in alert
-                    setErrorAlert(messageValidationsError[name]);
+                    setErrorAlertMessage(setAlertMessage, messageValidationsError[name]);
                     return;
                 }
                 continue;
@@ -62,14 +54,14 @@ const SignIn = () => {
             //! If the field is less than eight characters
             if(value.length < 8){
                 //! Set error in alert
-                setErrorAlert(`El campo [${name}] tiene menos de 8 carácteres`);
+                setErrorAlertMessage(setAlertMessage, `El campo [${name}] tiene menos de 8 carácteres`);
                 return;
             }
         }
 
         //! Validate if the password has the same values
         if(valuesForm.password !== valuesForm.repeatPassword){
-            setErrorAlert('Las contraseñas no coinciden');
+            setErrorAlertMessage(setAlertMessage, 'Las contraseñas no coinciden');
             return;
         }
         
@@ -81,18 +73,19 @@ const SignIn = () => {
                 password: valuesForm.password
             });
             
-            setAlertMessage({
-                msg: `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`,
-                type: 'success'
-            })
+            setSuccessAlertMessage(
+                alertMessage,
+                setAlertMessage,
+                `${valuesForm.name} tu cuenta ha sido creada exitosamente, Revisa tu email y confirmate!`
+            );
             resetFormValues();
         } catch (error) {
             if(error.code === 'ERR_NETWORK'){
-                setErrorAlert('El servicio no se encuentra disponible, Intentalo más tarde')
+                setErrorAlertMessage(setAlertMessage, 'El servicio no se encuentra disponible, Intentalo más tarde')
                 return;
             }
             const {response:{data:{error: msgerror}}} = error;
-            setErrorAlert(msgerror)
+            setErrorAlertMessage(setAlertMessage, msgerror)
         }
     };
 

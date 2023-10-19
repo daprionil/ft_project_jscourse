@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import Alert from "./Alert";
+import Alert, { clearAlertMessage, initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "./Alert";
 import { ValidateForms } from "../helpers/ValidateForms";
 import Loader from "./Loader";
 import { usePacientesContext } from "../context/PacientesProvider";
 
-const TIME_CLEAR_ALERT = 3000;
-
+//! Init values for form
 const initValuesFormAddPacientes = {
     petname: '',
     owner: '',
@@ -13,8 +12,6 @@ const initValuesFormAddPacientes = {
     sintomas: '',
     dateUp: ''
 };
-
-const initAlertValues = {msg: null, type: null};
 
 const FormAddPacientes = () => {
     //? Context properties
@@ -26,21 +23,6 @@ const FormAddPacientes = () => {
     const [ valuesForm, setValuesForm ] = useState(initValuesFormAddPacientes);
     const [ alertMessage, setAlertMessage ] = useState(initAlertValues);
     const [ loading, setLoading ] = useState(false);
-    
-    //! Set Alert states
-    const clearAlertMessage = () => setAlertMessage(initAlertValues);
-    const setErrorAlertMessage = msg => setAlertMessage({ msg, type: 'error'});
-    const setSuccessAlertMessage = msg => {
-        const typeSuccess = 'success';
-        
-        setAlertMessage({ msg, type: typeSuccess})
-        
-        setTimeout(() => {
-            if(alertMessage === typeSuccess){
-                clearAlertMessage();
-            }
-        }, TIME_CLEAR_ALERT);
-    };
     
     //! Change values to form
     const handleChangeValuesForm = ({target:{name,value}}) => {
@@ -76,14 +58,14 @@ const FormAddPacientes = () => {
         //! If exist empty values
         const validateEmptyValues = Object.values(valuesForm).filter(s => s.trim().length < 3);
         if(validateEmptyValues.length > 0){
-            setErrorAlertMessage('Los campos deben tener mínimo 3 carácteres');
+            setErrorAlertMessage(setAlertMessage, 'Los campos deben tener mínimo 3 carácteres');
             return;
         }
 
         //! If the email is invalid
         const validateEmail = ValidateForms['email'](valuesForm.emailOwner);
         if(!validateEmail){
-            setErrorAlertMessage('El email propietario no es válido');
+            setErrorAlertMessage(setAlertMessage, 'El email propietario no es válido');
             return;
         }
 
@@ -104,13 +86,13 @@ const FormAddPacientes = () => {
                 updatePaciente(pacienteForm._id, dataNewPaciente)
                     .then(() => {
                         //? Set success alert
-                        setSuccessAlertMessage('El paciente fue editado correctamente');
+                        setSuccessAlertMessage(alertMessage, setAlertMessage, 'El paciente fue editado correctamente');
 
                         clearEditMode();
                         resetValuesForm();
                     })
                     .catch(() => {
-                        setErrorAlertMessage('Ha habido un error, intenta de nuevo más tarde');
+                        setErrorAlertMessage(setAlertMessage,'Ha habido un error, intenta de nuevo más tarde');
                     })
                     .finally(() => {
                         setLoading(false)//? Clear loading form
@@ -120,13 +102,13 @@ const FormAddPacientes = () => {
                 addPaciente(dataNewPaciente)
                 .then(() => {
                     //? Set success alert
-                    setSuccessAlertMessage('El paciente ha sido creado correctamente');
+                    setSuccessAlertMessage(alertMessage, setAlertMessage, 'El paciente ha sido creado correctamente');
 
                     //! Reset form
                     resetValuesForm();
                 })
                 .catch(() => {
-                    setErrorAlertMessage('Ha habido un error, intenta de nuevo más tarde');
+                    setErrorAlertMessage(setAlertMessage,'Ha habido un error, intenta de nuevo más tarde');
                 })
                 .finally(() => {
                     setLoading(false)//? Clear loading form
@@ -135,13 +117,13 @@ const FormAddPacientes = () => {
         } catch (error) {
             console.log(error);
         }
-        clearAlertMessage();
+        clearAlertMessage(setAlertMessage);
     };
 
     const handleClickCancel = () => {
         clearEditMode();
         resetValuesForm();
-        clearAlertMessage();
+        clearAlertMessage(setAlertMessage);
     }
 
     useEffect(() => {

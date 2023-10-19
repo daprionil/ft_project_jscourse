@@ -8,7 +8,7 @@ const Header = () => {
                 <h1 className="text-xl font-black text-indigo-200">Administrador de Pacientes <span className="text-white">Veterinaria</span></h1>
                 <nav className="flex flex-col items-center gap-4 text-sm font-bold text-center text-white uppercase md:flex-row mt-05 lg:mt-0">
                     <NavLink to="/admin">Pacientes</NavLink>
-                    <NavLink to="/admin">Perfil</NavLink>
+                    <NavLink to="/admin/profile">Perfil</NavLink>
                     <LogOutButton/>
                 </nav>
             </div>

@@ -9,6 +9,8 @@ import PrivateRouteByAuth from "./components/PrivateRouteByAuth";
 import ProfileLayout from "./layouts/ProfileLayout";
 import NotFound404 from "./pages/NotFound404";
 import AdminPacientes from "./pages/AdminPacientes";
+import ProfileAdmin from "./pages/ProfileAdmin";
+import ChangePasswordAdmin from "./pages/ChangePasswordAdmin";
 
 function App() {
     return (
@@ -22,8 +24,8 @@ function App() {
             </Route>
             <Route path="/admin" element={<PrivateRouteByAuth Layout={ProfileLayout}/>}>
                 <Route index element={<AdminPacientes/>} />
-                <Route path="" element={<p></p>} />
-                <Route path="" element={<p></p>} />
+                <Route path="profile" element={<ProfileAdmin/>} />
+                <Route path="changepassword" element={<ChangePasswordAdmin/>} />
             </Route>
             <Route path="*" element={<NotFound404/>}/>
         </Routes>
