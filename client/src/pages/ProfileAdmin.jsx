@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import MenuAdmin from "../components/MenuAdmin";
 import useUserAuth from "../hooks/useUserAuth";
-import Alert, { clearAlertMessage, initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "../components/Alert";
+import Alert, { initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "../components/Alert";
 import { ValidateForms } from "../helpers/ValidateForms";
 import { useAuthContext } from "../context/AuthProvider";
 import putVeterinario from "../controllers/putVeterinario";
@@ -80,6 +80,14 @@ const ProfileAdmin = () => {
                 );
             }
         } catch (error) {
+            //! If exist an controled error
+            const messageError = error.response.data?.error;
+            if(messageError){
+                setErrorAlertMessage(setAlertMessage, messageError)
+                return;
+            }
+            
+            //! Other errors
             setErrorAlertMessage(setAlertMessage, 'Ha ocurrido un error, Intentalo de nuevo más tarde')
         } finally{
             //? Final request actions
@@ -124,12 +132,14 @@ const ProfileAdmin = () => {
                                         className="w-full bg-none border-none shadow"
                                         name="name"
                                         onChange={handleChangeValuesForm}
+                                        disabled={loading}
                                         value={valuesFormProfile.name}
                                     />
                                 </label>
                                 <label className="uppercase font-bold text-gray-600">
                                     <p>Sitio Web</p>
                                     <input
+                                        disabled={loading}
                                         type="text"
                                         placeholder="Tu sitio web"
                                         className="w-full bg-none border-none shadow"
@@ -141,6 +151,7 @@ const ProfileAdmin = () => {
                                 <label className="uppercase font-bold text-gray-600">
                                     <p>Teléfono</p>
                                     <input
+                                        disabled={loading}
                                         type="number"
                                         placeholder="Escribe tú Teléfono"
                                         className="w-full bg-none border-none shadow"
@@ -152,6 +163,7 @@ const ProfileAdmin = () => {
                                 <label className="uppercase font-bold text-gray-600">
                                     <p>Correo Electrónico</p>
                                     <input
+                                        disabled={loading}
                                         type="email"
                                         className="w-full bg-none border-none shadow"
                                         placeholder="Tú Email"
@@ -170,6 +182,7 @@ const ProfileAdmin = () => {
                                         :
                                             <>
                                                 <input
+                                                    disabled={loading}
                                                     type="submit"
                                                     style={{ background: '#536dff' }}
                                                     className="btn text-white rounded-lg"

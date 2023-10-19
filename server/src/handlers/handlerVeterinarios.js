@@ -190,11 +190,17 @@ const editProfile = async (req,res) => {
         if(!validation){
             throw CustomError.NotFoundError('No existe un veterinario para ese tokenJWT');
         }
+        //! Validate email before update user Veterinario
+        const existVeterinarioByEmail = await findOneVeterinario({email});
+        if(existVeterinarioByEmail && existVeterinarioByEmail?.email !== validation.email){
+            throw CustomError.AuthorizationError('El email que intentas actualizar ya está en uso');
+        };
 
         const response = await updateVeterinario(veterinario, {name, email, phoneNumber,website});
         res.json(response);
-    } catch ({status = 500, msg}) {
-        res.status(status).json({error:msg});
+    } catch ({status = 500, message}) {
+        
+        res.status(status).json({error:message});
     }
 }
 
