@@ -1,8 +1,10 @@
 import { useState } from "react"
 import MenuAdmin from "../components/MenuAdmin"
 import { useAuthContext } from "../context/AuthProvider";
-import Alert, { initAlertValues } from "../components/Alert";
+import Alert, { initAlertValues, setErrorAlertMessage, setSuccessAlertMessage } from "../components/Alert";
 import Loader from "../components/Loader";
+import { ValidateForms } from "../helpers/ValidateForms";
+import changePasswordVeterinario from "../controllers/changePasswordVeterinario";
 
 const initFormPasswordValues = {
     password: '',
@@ -28,6 +30,59 @@ const ChangePasswordAdmin = () => {
     //? Send request to change password from admin profile
     const handleSubmit = evt => {
         evt.preventDefault();
+
+        //! Validate form - If exist empty fields
+        const existEmptyValues = Object.values(formPasswordValues).some( v => !(v.trim()));
+        if(existEmptyValues){
+            setErrorAlertMessage(setAlertMessage, 'Completa todos los campos');
+            return;
+        }
+
+        //! Validate form - If the password have a incorrect format
+        const validationPassword = ValidateForms.password(formPasswordValues.password);
+        if(!validationPassword){
+            setErrorAlertMessage(setAlertMessage, 'La contraseña no es válida, Ej: passW23#');
+            return;
+        }
+        
+        //! Validate form - If the new password are equal
+        if(formPasswordValues.password !== formPasswordValues.passwordrepeat){
+            setErrorAlertMessage(setAlertMessage, 'Las contraseñas no son iguales');
+            return;
+        }
+
+        //! Validate form - If the new password are equal to current password
+        if(formPasswordValues.password.trim() === formPasswordValues.passwordcurrent.trim()){
+            setErrorAlertMessage(setAlertMessage, 'Tu nueva contraseña es igual a la actual');
+            return;
+        }
+
+        //! Send request to update password
+        setLoading(true);//* Starts loader
+
+        changePasswordVeterinario({data:{
+            currentPassword: formPasswordValues.passwordcurrent.trim(),
+            newPassword: formPasswordValues.password.trim()
+        }, authToken})
+            .then(({data}) => {
+                //? If the password was changed successfully
+                if(data.updated){
+                    setSuccessAlertMessage(alertMessage, setAlertMessage, 'Tu contraseña ha sido editada correctamente');
+                    return;
+                }
+            })
+            .catch(({response:{data}}) => {
+                //? If exist an error from server
+                if(data?.error){
+                    setErrorAlertMessage(setAlertMessage, data.error);
+                    return;
+                }
+                setErrorAlertMessage(setAlertMessage, 'Ha habido un problema, intentalo nuevamente más tarde');
+            })
+            .finally(() => {
+                setLoading(false);//* Clear loading
+                setFormsPasswordValues(initFormPasswordValues);//* Reset form values
+            });
     };
 
     return (
@@ -82,7 +137,7 @@ const ChangePasswordAdmin = () => {
                         {
                             alertMessage.msg && <Alert {...alertMessage} />
                         }
-                        <div className="uppercase font-bold text-gray-600 w-full relative">
+                        <div className="uppercase font-bold text-gray-600 w-full relative py-4">
                             {
                                 loading ?
                                     <Loader />
