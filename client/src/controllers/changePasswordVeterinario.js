@@ -1,7 +1,7 @@
 import clientAxios from "../config/axios";
 
 export default function({authToken, data:{ currentPassword, newPassword }}){
-    return clientAxios.post(
+    return clientAxios.put(
         '/veterinarios/profile/changepassword',
         {
             currentPassword,

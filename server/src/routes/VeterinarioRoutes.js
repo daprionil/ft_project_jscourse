@@ -38,6 +38,6 @@ const veterinarioRouter = Router();
         .get(authMiddleware, profile)//? Valida token y retorna profile
         .put(authMiddleware, editProfile);//? Valida el token y modifica el usuario
     
-    veterinarioRouter.post('/profile/changepassword', authMiddleware, profileChangePassword)
+    veterinarioRouter.put('/profile/changepassword', authMiddleware, profileChangePassword)
 
 module.exports = veterinarioRouter;
