@@ -4,7 +4,7 @@ const findVeterinarioById = async (id) => {
     let veterinario = null;
 
     if(id){
-        const findVeterinario = await VeterinarioModel.findById(id).select("-password -confirm");
+        const findVeterinario = await VeterinarioModel.findById(id).select("-confirm -token");
         veterinario = findVeterinario;
     }
     return veterinario;

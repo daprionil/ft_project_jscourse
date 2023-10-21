@@ -204,6 +204,46 @@ const editProfile = async (req,res) => {
     }
 }
 
+const profileChangePassword = async (req,res) => {
+    /**
+     * 1. Validar el token con middleware [x]
+     * 2. Validar el passwordActual, newPassword veterinario.comparePassword
+     * 4. Validar contraseña actual con el usuario.
+     * 5. Actualizar el veterinario
+     * 6. Retornar confirmación
+     */
+    try {
+        const { veterinario } = res.locals;
+        const { currentPassword, newPassword } = req.body;
+
+        //! Validate if the values from body are empty
+        if(!currentPassword && !newPassword){
+            throw CustomError.NotFoundError('No existen los parámetros para cambiar tu contraseña');
+        }
+
+        //! Validate if the currentPassword is equal to saved password
+        const validateCurrentPassword = await veterinario.comparePassword(currentPassword);
+        if(!validateCurrentPassword){
+            throw CustomError.AuthorizationError('La contraseña actual no es correcta ');
+        }
+
+        //? Update password veterinario
+        const response = await editVeterinario(veterinario._id, {password: newPassword});
+
+        //! If the values was not updated
+        if(!response){
+            throw CustomError.InternalServerError('Ha habido un error, intentalo más tarde');
+        }
+
+        //* If all proccess was successfully send the response
+        res.json({
+            updated: true
+        });
+    } catch ({message, status = 500}) {
+        res.status(status).json({error:message})
+    }
+};
+
 
 module.exports = {
     register,
@@ -213,5 +253,6 @@ module.exports = {
     passwordToReset,
     validatePassword,
     changePassword,
-    editProfile
+    editProfile,
+    profileChangePassword
 }
