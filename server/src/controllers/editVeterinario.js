@@ -20,7 +20,7 @@ const editVeterinario = async (idVeterinario, {email, name, password, phoneNumbe
     };
 
     //!Save changes
-    veterinario.save();
+    await veterinario.save();
     
     return veterinario;
 };
