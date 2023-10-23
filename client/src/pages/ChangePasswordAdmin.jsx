@@ -60,10 +60,11 @@ const ChangePasswordAdmin = () => {
         //! Send request to update password
         setLoading(true);//* Starts loader
 
-        changePasswordVeterinario({data:{
+        changePasswordVeterinario({
             currentPassword: formPasswordValues.passwordcurrent.trim(),
-            newPassword: formPasswordValues.password.trim()
-        }, authToken})
+            newPassword: formPasswordValues.password.trim(),
+            authToken
+        })
             .then(({data}) => {
                 //? If the password was changed successfully
                 if(data.updated){
